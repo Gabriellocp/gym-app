@@ -28,7 +28,7 @@ export default function Header({
 }: BottomTabHeaderProps) {
   return (
     <View style={styles.headerContainer}>
-      <Text style={styles.headerTitle}>Bem-vindo</Text>
+      <Text style={styles.headerTitle}>{options.title}</Text>
     </View>
   );
 }
