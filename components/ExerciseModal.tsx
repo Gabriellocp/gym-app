@@ -1,9 +1,9 @@
-import { IExercise } from "@/app/workout/create";
 import { Modal, ScrollView, Text, View } from "react-native";
 import Input from "./Input";
 import { useState } from "react";
 import DefaultButton from "./Button";
 import { DefaultColors } from "@/constants/Colors";
+import { IExercise } from "@/infra/models";
 
 type ExerciseModalProps = {
   onClose: () => void;

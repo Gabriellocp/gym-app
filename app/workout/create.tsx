@@ -4,18 +4,13 @@ import { useCreateExerciseContext } from "@/components/CreateExerciseProvider";
 import ExerciseItemList from "@/components/ExerciseItemList";
 import ExerciseModal from "@/components/ExerciseModal";
 import Input from "@/components/Input";
+import { IExercise } from "@/infra/models";
 import { useState } from "react";
 import { FlatList, View } from "react-native";
 
-export type IExercise = {
-  name: string;
-  sets: number;
-  interval: number;
-  observation?: string;
-};
-
 export default function CreateWorkout() {
-  const { exercises, create } = useCreateExerciseContext();
+  const { exercises, create, save } = useCreateExerciseContext();
+  const [name, setName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const handleShowModal = () => {
     setShowModal((prev) => !prev);
@@ -27,11 +22,13 @@ export default function CreateWorkout() {
     }
     handleShowModal();
   };
-
+  const handleSave = () => {
+    save(name, exercises);
+  };
   return (
     <ContentView>
       <View style={{ flex: 1, gap: 24 }}>
-        <Input></Input>
+        <Input onChangeText={setName}></Input>
         <FlatList
           data={exercises}
           ItemSeparatorComponent={() => <View style={{ height: 16 }}></View>}
@@ -49,6 +46,11 @@ export default function CreateWorkout() {
       <DefaultButton
         title="Novo exercício"
         onPress={handleShowModal}
+        style={{ container: { alignSelf: "center" } }}
+      />
+      <DefaultButton
+        title="Salvar"
+        onPress={handleSave}
         style={{ container: { alignSelf: "center" } }}
       />
     </ContentView>

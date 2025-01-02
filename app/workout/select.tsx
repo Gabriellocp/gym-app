@@ -6,26 +6,7 @@ import { useState } from "react";
 import { FlatList, ScrollView, Text, View } from "react-native";
 
 export default function StartWorkout() {
-  const [workouts, setWorkouts] = useState([
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-    { name: "teste" },
-  ]);
+  const [workouts, setWorkouts] = useState<{ name: string }[]>([]);
   return (
     <ContentView>
       <FlatList

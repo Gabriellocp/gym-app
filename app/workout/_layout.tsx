@@ -1,9 +1,12 @@
 import CreateExerciseProvider from "@/components/CreateExerciseProvider";
+import ExerciseService from "@/infra/services/ExerciseService";
+import LocalStorageService from "@/infra/services/LocalStorageSaveService";
 import { Stack } from "expo-router";
 
 export default function WorkoutLayout() {
+  const service = new ExerciseService();
   return (
-    <CreateExerciseProvider>
+    <CreateExerciseProvider service={service}>
       <Stack>
         <Stack.Screen
           name="select"

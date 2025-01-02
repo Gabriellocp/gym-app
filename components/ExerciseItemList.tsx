@@ -1,5 +1,5 @@
-import { IExercise } from "@/app/workout/create";
 import { DefaultColors } from "@/constants/Colors";
+import { IExercise } from "@/infra/models";
 import { Text, View } from "react-native";
 
 type ExerciseItemListProps = {
