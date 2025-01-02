@@ -1,4 +1,4 @@
-import CreateExerciseProvider from "@/components/CreateExerciseProvider";
+import CreateExerciseProvider from "@/components/ExerciseProvider";
 import ExerciseService from "@/infra/services/ExerciseService";
 import LocalStorageService from "@/infra/services/LocalStorageSaveService";
 import { Stack } from "expo-router";

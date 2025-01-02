@@ -8,15 +8,16 @@ import {
   useState,
 } from "react";
 
-type ICreateExerciseContext = {
-  exercises: IExercise[];
-  create: (exercise: IExercise) => IExercise | false;
-  save: (name: string, exercises: IExercise[]) => Promise<boolean>;
-} | null;
+type IExerciseContext =
+  | ({
+      exercises: IExercise[];
+      create: (exercise: IExercise) => IExercise | false;
+    } & IExerciceService)
+  | null;
 
-const CreateExerciseContext = createContext<ICreateExerciseContext>(null);
-export const useCreateExerciseContext = () => {
-  const context = useContext(CreateExerciseContext);
+const ExerciseContext = createContext<IExerciseContext>(null);
+export const useExerciseContext = () => {
+  const context = useContext(ExerciseContext);
   if (!context) {
     throw new Error("Context not provided");
   }
@@ -38,21 +39,18 @@ export default function CreateExerciseProvider({
     setExercises((prev) => [...prev, exercise]);
     return exercise;
   };
-  useEffect(() => {
-    const fetch = async () => {
-      console.log(await service.loadAll());
-    };
-    fetch();
-  }, []);
+
   return (
-    <CreateExerciseContext.Provider
+    <ExerciseContext.Provider
       value={{
         exercises,
         create: handleCreateExercise,
         save: service.save,
+        loadAll: service.loadAll,
+        loadById: service.loadById,
       }}
     >
       {children}
-    </CreateExerciseContext.Provider>
+    </ExerciseContext.Provider>
   );
 }

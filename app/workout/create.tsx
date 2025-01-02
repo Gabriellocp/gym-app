@@ -1,6 +1,6 @@
 import DefaultButton from "@/components/Button";
 import ContentView from "@/components/ContentView";
-import { useCreateExerciseContext } from "@/components/CreateExerciseProvider";
+import { useExerciseContext } from "@/components/ExerciseProvider";
 import ExerciseItemList from "@/components/ExerciseItemList";
 import ExerciseModal from "@/components/ExerciseModal";
 import Input from "@/components/Input";
@@ -9,7 +9,7 @@ import { useState } from "react";
 import { FlatList, View } from "react-native";
 
 export default function CreateWorkout() {
-  const { exercises, create, save } = useCreateExerciseContext();
+  const { exercises, create, save } = useExerciseContext();
   const [name, setName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const handleShowModal = () => {
