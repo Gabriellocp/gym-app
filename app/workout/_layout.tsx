@@ -1,12 +1,11 @@
-import CreateExerciseProvider from "@/components/ExerciseProvider";
+import ExerciseProvider from "@/components/ExerciseProvider";
 import ExerciseService from "@/infra/services/ExerciseService";
-import LocalStorageService from "@/infra/services/LocalStorageSaveService";
 import { Stack } from "expo-router";
 
 export default function WorkoutLayout() {
   const service = new ExerciseService();
   return (
-    <CreateExerciseProvider service={service}>
+    <ExerciseProvider service={service}>
       <Stack>
         <Stack.Screen
           name="select"
@@ -17,6 +16,6 @@ export default function WorkoutLayout() {
           options={{ title: "Novo treino" }}
         ></Stack.Screen>
       </Stack>
-    </CreateExerciseProvider>
+    </ExerciseProvider>
   );
 }

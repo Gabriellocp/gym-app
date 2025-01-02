@@ -5,11 +5,13 @@ import { DefaultColors } from "@/constants/Colors";
 type WorkoutItemListProps = {
   workout: { name: string; count?: number };
   onPress: () => void;
+  onRemove: () => void;
 };
 
 export default function WorkoutItemList({
   workout,
   onPress,
+  onRemove,
 }: WorkoutItemListProps) {
   return (
     <View
@@ -32,6 +34,14 @@ export default function WorkoutItemList({
       >
         {workout.name}
       </Text>
+      <DefaultButton
+        title="Deletar"
+        onPress={onRemove}
+        style={{
+          container: { height: 20, backgroundColor: DefaultColors.accent },
+          text: { fontSize: 14, color: DefaultColors.primary },
+        }}
+      />
       <DefaultButton
         title="Começar"
         onPress={onPress}

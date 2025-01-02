@@ -1,5 +1,6 @@
 
-export interface IStorageService<T = any, R = string,> {
-    save: (id: string, data: T) => void,
-    load: (id: R) => Promise<T | null>,
+export interface IStorageService<T = any> {
+    save: (data: T) => void,
+    load: () => Promise<T | T[] | null>,
+    remove: (id: string) => Promise<void>
 }

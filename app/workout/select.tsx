@@ -1,12 +1,28 @@
 import DefaultButton from "@/components/Button";
 import ContentView from "@/components/ContentView";
+import { useExerciseContext } from "@/components/ExerciseProvider";
 import WorkoutItemList from "@/components/WorkoutItemList";
+import { IWorkout } from "@/infra/models";
 import { Link } from "expo-router";
-import { useState } from "react";
-import { FlatList, ScrollView, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { FlatList, View } from "react-native";
 
 export default function StartWorkout() {
-  const [workouts, setWorkouts] = useState<{ name: string }[]>([]);
+  const { loadAll, remove } = useExerciseContext();
+  const [workouts, setWorkouts] = useState<IWorkout[]>([]);
+  useEffect(() => {
+    const fetch = async () => {
+      console.log(await loadAll());
+      setWorkouts(await loadAll());
+    };
+    fetch();
+  }, []);
+  const handleRemoveItem = async (name: string) => {
+    try {
+      await remove(name);
+      setWorkouts((prev) => [...prev].filter((w) => w.name !== name));
+    } catch (err) {}
+  };
   return (
     <ContentView>
       <FlatList
@@ -19,6 +35,7 @@ export default function StartWorkout() {
               key={item.name}
               workout={item}
               onPress={() => console.log("Workout")}
+              onRemove={() => handleRemoveItem(item.name)}
             />
           );
         }}

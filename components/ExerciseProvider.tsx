@@ -1,12 +1,6 @@
 import { IExercise, IWorkout } from "@/infra/models";
 import { IExerciceService } from "@/infra/services/interfaces/IExerciseService";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 type IExerciseContext =
   | ({
@@ -48,6 +42,7 @@ export default function CreateExerciseProvider({
         save: service.save,
         loadAll: service.loadAll,
         loadById: service.loadById,
+        remove: service.remove,
       }}
     >
       {children}

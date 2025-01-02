@@ -1,37 +1,42 @@
 import { IExercise, IWorkout } from "../models"
 import { IExerciceService } from "./interfaces/IExerciseService"
 import { IStorageService } from "./interfaces/IStorageService"
-import LocalStorageService from "./LocalStorageSaveService"
+import WorkoutLocalStorageService from "./WorkoutLocalStorageService"
 
 
-class ExerciseService implements IExerciceService {
-    private service?: IStorageService<IWorkout[]>
-    constructor({ service }: { service?: IStorageService } = { service: new LocalStorageService<IWorkout>() }) {
+class ExerciseService implements IExerciceService<IWorkout> {
+    private service?: IStorageService<IWorkout>
+    constructor({ service }: { service?: IStorageService<IWorkout> } = { service: WorkoutLocalStorageService }) {
         this.service = service
     }
+
     loadAll = async (): Promise<IWorkout[]> => {
-        const exercises = await this.service?.load('workouts')
-        if (!exercises) {
-            return []
-        }
-        return exercises
+        const exercises = await this.service?.load()
+
+        return exercises as IWorkout[]
     }
     loadById = async (id: string): Promise<IWorkout | null> => {
-        const exercises = await this.service?.load('workouts')
+        const exercises = await this.service?.load()
         if (!exercises) {
             return null
         }
-        return exercises.find(e => e.name === id) ?? null
+        if (typeof exercises === 'object') {
+            return exercises as IWorkout
+        }
+        return (exercises as IWorkout[]).find(e => e.name === id) ?? null
     }
-    save = async (workoutName: string, exercises: IExercise[]): Promise<boolean> => {
-        const currentData = await this.loadAll()
+    save = async (workoutName: string, exercises: IExercise[]): Promise<IWorkout> => {
         const addData = {
             name: workoutName,
             exercises
         }
-        this.service?.save('workouts', [...currentData, addData])
-        return true
+        this.service?.save(addData)
+        return addData
     };
+
+    remove = async (workoutName: string): Promise<void> => {
+        await this.service?.remove(workoutName)
+    }
 
 }
 
