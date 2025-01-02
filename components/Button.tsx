@@ -1,10 +1,9 @@
 import { DefaultColors } from "@/constants/Colors";
-import { ReactNode } from "react";
+import { forwardRef, ReactNode } from "react";
 import {
-  StyleProp,
   StyleSheet,
-  StyleSheetProperties,
   Text,
+  TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
   ViewStyle,
@@ -12,9 +11,10 @@ import {
 
 type DefaultButtonProps = TouchableOpacityProps & { title: ReactNode } & {
   style?: {
-    container?: StyleProp<ViewStyle>;
-    text?: StyleProp<ViewStyle>;
+    container?: ViewStyle;
+    text?: TextStyle;
   };
+  center?: boolean;
 };
 const defaultButtonStyle = StyleSheet.create({
   container: {
@@ -22,25 +22,39 @@ const defaultButtonStyle = StyleSheet.create({
     minHeight: 40,
     display: "flex",
     flexDirection: "row",
-    padding: 16,
-    width: 200,
+    padding: 4,
+    alignSelf: "flex-start",
+    minWidth: 120,
+    maxWidth: 200,
     borderRadius: 8,
+    justifyContent: "center",
   },
   text: {
-    flex: 1,
+    alignContent: "center",
     textAlign: "center",
     fontSize: 16,
     fontWeight: "700",
     color: DefaultColors.text,
   },
 });
-export default function DefaultButton(props: DefaultButtonProps) {
-  return (
-    <TouchableOpacity
-      style={[defaultButtonStyle.container, props.style?.container]}
-      activeOpacity={0.5}
-    >
-      <Text style={defaultButtonStyle.text}>{props.title}</Text>
-    </TouchableOpacity>
-  );
-}
+const DefaultButton = forwardRef(
+  (props: DefaultButtonProps, ref: React.ForwardedRef<any>) => {
+    return (
+      <TouchableOpacity
+        {...props}
+        ref={ref}
+        style={[
+          defaultButtonStyle.container,
+          props.style?.container,
+          props.center && { alignSelf: "center" },
+        ]}
+        activeOpacity={0.5}
+      >
+        <Text style={[defaultButtonStyle.text, props.style?.text]}>
+          {props.title}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+);
+export default DefaultButton;

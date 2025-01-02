@@ -1,11 +1,12 @@
 import DefaultButton from "@/components/Button";
+import ContentView from "@/components/ContentView";
 import { Link } from "expo-router";
-import { Button, Text, View } from "react-native";
 export default function Home() {
   return (
-    <View>
-      <Text>HOME PAGE TAB</Text>
-      <DefaultButton title="TESTE" />
-    </View>
+    <ContentView>
+      <Link href="/workout/select" asChild>
+        <DefaultButton title="Iniciar treino" />
+      </Link>
+    </ContentView>
   );
 }
