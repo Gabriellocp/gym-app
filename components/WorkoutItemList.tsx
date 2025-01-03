@@ -38,8 +38,8 @@ export default function WorkoutItemList({
         title="Deletar"
         onPress={onRemove}
         style={{
-          container: { height: 20, backgroundColor: DefaultColors.accent },
-          text: { fontSize: 14, color: DefaultColors.primary },
+          container: { height: 20, backgroundColor: DefaultColors.error },
+          text: { fontSize: 14, color: DefaultColors.text },
         }}
       />
       <DefaultButton
@@ -47,7 +47,7 @@ export default function WorkoutItemList({
         onPress={onPress}
         style={{
           container: { height: 20 },
-          text: { fontSize: 14, color: DefaultColors.accent },
+          text: { fontSize: 14, color: DefaultColors.text },
         }}
       />
     </View>

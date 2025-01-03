@@ -7,9 +7,13 @@ import Input from "@/components/Input";
 import { IExercise } from "@/infra/models";
 import { useState } from "react";
 import { FlatList, View } from "react-native";
+import { useNavigation } from "expo-router";
+import { useWorkoutContext } from "@/components/WorkoutProvider";
 
 export default function CreateWorkout() {
-  const { exercises, create, save } = useExerciseContext();
+  const navigate = useNavigation();
+  const { exercises, create } = useExerciseContext();
+  const { save, update } = useWorkoutContext();
   const [name, setName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const handleShowModal = () => {
@@ -23,7 +27,11 @@ export default function CreateWorkout() {
     handleShowModal();
   };
   const handleSave = () => {
-    save(name, exercises);
+    const workout = { name, exercises };
+    save(workout).then((_) => {
+      update((prev) => [...prev, workout]);
+      navigate.goBack();
+    });
   };
   return (
     <ContentView>

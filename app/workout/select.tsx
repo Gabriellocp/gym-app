@@ -1,26 +1,20 @@
 import DefaultButton from "@/components/Button";
 import ContentView from "@/components/ContentView";
-import { useExerciseContext } from "@/components/ExerciseProvider";
 import WorkoutItemList from "@/components/WorkoutItemList";
-import { IWorkout } from "@/infra/models";
+import { useWorkoutContext } from "@/components/WorkoutProvider";
 import { Link } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FlatList, View } from "react-native";
 
 export default function StartWorkout() {
-  const { loadAll, remove } = useExerciseContext();
-  const [workouts, setWorkouts] = useState<IWorkout[]>([]);
+  const { loadAll, remove, workouts, update } = useWorkoutContext();
   useEffect(() => {
-    const fetch = async () => {
-      console.log(await loadAll());
-      setWorkouts(await loadAll());
-    };
-    fetch();
+    loadAll();
   }, []);
   const handleRemoveItem = async (name: string) => {
     try {
       await remove(name);
-      setWorkouts((prev) => [...prev].filter((w) => w.name !== name));
+      update((prev) => [...prev].filter((w) => w.name !== name));
     } catch (err) {}
   };
   return (

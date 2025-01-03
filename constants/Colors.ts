@@ -26,8 +26,11 @@ export const Colors = {
 };
 
 export const DefaultColors = {
-  backgroud: 'white',
-  text: 'black',
-  primary: 'grey',
-  accent: 'yellow'
+  background: '#FFFFFF',  // Branco puro
+  text: '#333333',        // Texto principal - cinza escuro
+  primary: '#42A5F5',     // Cor primária - azul claro
+  accent: '#FF4081',      // Cor de destaque - rosa claro
+  error: '#D32F2F'        // Cor de erro - vermelho forte
 }
+
+

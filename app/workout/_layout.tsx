@@ -1,21 +1,24 @@
 import ExerciseProvider from "@/components/ExerciseProvider";
-import ExerciseService from "@/infra/services/ExerciseService";
+import WorkoutProvider from "@/components/WorkoutProvider";
+import WorkoutService from "@/infra/services/WorkoutService";
 import { Stack } from "expo-router";
 
 export default function WorkoutLayout() {
-  const service = new ExerciseService();
+  const service = new WorkoutService();
   return (
-    <ExerciseProvider service={service}>
-      <Stack>
-        <Stack.Screen
-          name="select"
-          options={{ title: "Selecionar treino" }}
-        ></Stack.Screen>
-        <Stack.Screen
-          name="create"
-          options={{ title: "Novo treino" }}
-        ></Stack.Screen>
-      </Stack>
-    </ExerciseProvider>
+    <WorkoutProvider service={service}>
+      <ExerciseProvider>
+        <Stack>
+          <Stack.Screen
+            name="select"
+            options={{ title: "Selecionar treino" }}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="create"
+            options={{ title: "Novo treino" }}
+          ></Stack.Screen>
+        </Stack>
+      </ExerciseProvider>
+    </WorkoutProvider>
   );
 }

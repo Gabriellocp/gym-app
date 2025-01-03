@@ -36,7 +36,7 @@ export default function ExerciseModal({ onClose, onSave }: ExerciseModalProps) {
       >
         <View
           style={{
-            backgroundColor: DefaultColors.backgroud,
+            backgroundColor: DefaultColors.background,
             justifyContent: "center",
             width: 320,
             height: 230,

@@ -1,13 +1,10 @@
 import { IExercise, IWorkout } from "@/infra/models";
-import { IExerciceService } from "@/infra/services/interfaces/IExerciseService";
 import { createContext, ReactNode, useContext, useState } from "react";
 
-type IExerciseContext =
-  | ({
-      exercises: IExercise[];
-      create: (exercise: IExercise) => IExercise | false;
-    } & IExerciceService)
-  | null;
+type IExerciseContext = {
+  exercises: IExercise[];
+  create: (exercise: IExercise) => IExercise | false;
+} | null;
 
 const ExerciseContext = createContext<IExerciseContext>(null);
 export const useExerciseContext = () => {
@@ -18,10 +15,8 @@ export const useExerciseContext = () => {
   return context;
 };
 export default function CreateExerciseProvider({
-  service,
   children,
 }: {
-  service: IExerciceService;
   children: ReactNode;
 }) {
   const [exercises, setExercises] = useState<IExercise[]>([]);
@@ -39,10 +34,6 @@ export default function CreateExerciseProvider({
       value={{
         exercises,
         create: handleCreateExercise,
-        save: service.save,
-        loadAll: service.loadAll,
-        loadById: service.loadById,
-        remove: service.remove,
       }}
     >
       {children}
