@@ -2,7 +2,7 @@ import DefaultButton from "@/components/Button";
 import ContentView from "@/components/ContentView";
 import WorkoutItemList from "@/components/WorkoutItemList";
 import { useWorkoutContext } from "@/components/WorkoutProvider";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useEffect } from "react";
 import { FlatList, View } from "react-native";
 
@@ -17,6 +17,12 @@ export default function StartWorkout() {
       update((prev) => [...prev].filter((w) => w.name !== name));
     } catch (err) {}
   };
+  const handleStartWorkout = (name: string) => {
+    router.push({
+      pathname: "/workout/start",
+      params: { id: name },
+    });
+  };
   return (
     <ContentView>
       <FlatList
@@ -28,7 +34,7 @@ export default function StartWorkout() {
             <WorkoutItemList
               key={item.name}
               workout={item}
-              onPress={() => console.log("Workout")}
+              onPress={() => handleStartWorkout(item.name)}
               onRemove={() => handleRemoveItem(item.name)}
             />
           );

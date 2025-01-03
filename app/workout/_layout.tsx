@@ -1,12 +1,15 @@
 import ExerciseProvider from "@/components/ExerciseProvider";
 import WorkoutProvider from "@/components/WorkoutProvider";
+import WorkoutControlService from "@/infra/services/WorkoutControlService";
+import WorkoutLocalControlService from "@/infra/services/WorkoutLocalControlService";
 import WorkoutService from "@/infra/services/WorkoutService";
 import { Stack } from "expo-router";
 
 export default function WorkoutLayout() {
   const service = new WorkoutService();
+  const control = new WorkoutControlService(WorkoutLocalControlService);
   return (
-    <WorkoutProvider service={service}>
+    <WorkoutProvider service={service} control={control}>
       <ExerciseProvider>
         <Stack>
           <Stack.Screen
@@ -16,6 +19,10 @@ export default function WorkoutLayout() {
           <Stack.Screen
             name="create"
             options={{ title: "Novo treino" }}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="start"
+            options={{ title: "Iniciar" }}
           ></Stack.Screen>
         </Stack>
       </ExerciseProvider>

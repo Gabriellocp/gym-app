@@ -17,10 +17,11 @@ class WorkoutService implements IWorkoutService<IWorkout> {
     }
     loadById = async (id: string): Promise<IWorkout | null> => {
         const exercises = await this.service?.load()
+        console.log(exercises)
         if (!exercises) {
             return null
         }
-        if (typeof exercises === 'object') {
+        if (!Array.isArray(exercises)) {
             return exercises as IWorkout
         }
         return (exercises as IWorkout[]).find(e => e.name === id) ?? null

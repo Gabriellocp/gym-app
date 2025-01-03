@@ -22,7 +22,7 @@ class WorkoutLocalStorageService implements IStorageService<IWorkout> {
         }
     };
 
-    remove = async (id: string) => {
+    remove = async (id?: string) => {
         try {
             const workouts = await this.storage.load('workouts') ?? []
             const item = workouts?.find(e => e.name === id)
