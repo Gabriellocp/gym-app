@@ -2,6 +2,7 @@ import DefaultButton from "@/components/Button";
 import ContentView from "@/components/ContentView";
 import WorkoutExercise from "@/components/WorkoutExercise";
 import { useWorkoutContext } from "@/components/WorkoutProvider";
+import useExitConfirm from "@/hooks/useExitConfirm";
 import {
   IActiveExercise,
   IActiveWorkout,
@@ -20,6 +21,7 @@ export default function StartWorkout() {
     name: "",
     timeSpent: 0,
   });
+  useExitConfirm();
   const { loadById, start } = useWorkoutContext();
   useEffect(() => {
     const fetch = async () => {
