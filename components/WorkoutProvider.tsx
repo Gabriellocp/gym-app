@@ -58,6 +58,10 @@ export default function WorkoutProvider({
         pauseSet: control.pauseSet,
         resumeSet: control.resumeSet,
         start: control.start,
+        select: control.select,
+        finishWorkout: control.finishWorkout,
+        workoutStatus: control.workoutStatus,
+        getUnfinishedWorkout: control.getUnfinishedWorkout,
       }}
     >
       {children}

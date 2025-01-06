@@ -2,12 +2,16 @@ import { useNavigation } from "expo-router"
 import { useEffect } from "react"
 import { Alert, BackHandler, Platform } from "react-native"
 type ExitConfirmProps = {
-    message?: string
+    message?: string,
+    callback?: () => Promise<void>
 }
 
 export default function useExitConfirm({
-    message
-}: ExitConfirmProps = { message: '' }) {
+    message,
+    callback
+}: ExitConfirmProps = {
+
+    }) {
 
     const navigation = useNavigation()
     useEffect(() => {
@@ -22,8 +26,8 @@ export default function useExitConfirm({
             Alert.alert('Deseja sair?', message ?? '', [
                 { text: 'Cancelar', onPress: () => null },
                 {
-                    text: 'Sim', onPress: () => {
-                        console.log(isExitingApp)
+                    text: 'Sim', onPress: async () => {
+                        await callback?.()
                         return isExitingApp ? BackHandler.exitApp() : navigationBackFn()
                     },
                 },

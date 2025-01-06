@@ -15,16 +15,19 @@ type WorkoutExerciseProps = {
   exercise: IActiveExercise;
   status: IExerciseStatus;
   onControl: (exercise: IActiveExercise) => void;
+  canPlay?: boolean;
 };
 export default function WorkoutExercise({
   exercise,
   status,
   onControl,
+  canPlay = true,
 }: WorkoutExerciseProps) {
   const { startSet, pauseSet, finishSet, resumeSet } = useWorkoutContext();
   const [isLastSet, setIsLastSet] = useState(false);
   const handleControl = (cb: IActiveExercise | null | undefined) => {
     const ex = cb;
+    console.log("ex", ex);
     if (!ex) {
       return;
     }
@@ -56,51 +59,57 @@ export default function WorkoutExercise({
         </Text>
         <View>
           <Text>Séries: {exercise.sets}</Text>
-          <Text>Intervalo: {exercise.interval}</Text>
-          <Text>Intervalo: {exercise.currentSet}</Text>
+          {canPlay && (
+            <>
+              <Text>Intervalo: {exercise.interval}</Text>
+              <Text>Intervalo: {exercise.currentSet}</Text>
+            </>
+          )}
         </View>
       </View>
-      <View>
-        {
+      {canPlay && (
+        <View>
           {
-            DOING: (
-              <>
-                <DefaultButton
-                  title={"INTERVAL"}
-                  onPress={() => handleControl(pauseSet())}
-                />
-                {/* <DefaultButton title={"FINISH"} onPress={onChange} /> */}
-              </>
-            ),
-            INTERVAL: (
-              <>
-                <Counter time={exercise.interval} />
-                {!isLastSet && (
+            {
+              DOING: (
+                <>
                   <DefaultButton
-                    title={"RESUME"}
-                    onPress={() => handleControl(resumeSet())}
+                    title={"INTERVAL"}
+                    onPress={() => handleControl(pauseSet())}
                   />
-                )}
+                  {/* <DefaultButton title={"FINISH"} onPress={onChange} /> */}
+                </>
+              ),
+              INTERVAL: (
+                <>
+                  <Counter time={exercise.interval} />
+                  {!isLastSet && (
+                    <DefaultButton
+                      title={"RESUME"}
+                      onPress={() => handleControl(resumeSet())}
+                    />
+                  )}
+                  <DefaultButton
+                    title={"FINISH"}
+                    onPress={() => handleControl(finishSet())}
+                  />
+                </>
+              ),
+              FINISHED: (
+                <View>
+                  <Text>CONGRATS!</Text>
+                </View>
+              ),
+              UNDONE: (
                 <DefaultButton
-                  title={"FINISH"}
-                  onPress={() => handleControl(finishSet())}
+                  title={"PLAY"}
+                  onPress={() => handleControl(startSet(exercise))}
                 />
-              </>
-            ),
-            FINISHED: (
-              <View>
-                <Text>CONGRATS!</Text>
-              </View>
-            ),
-            UNDONE: (
-              <DefaultButton
-                title={"PLAY"}
-                onPress={() => handleControl(startSet(exercise))}
-              />
-            ),
-          }[status]
-        }
-      </View>
+              ),
+            }[status]
+          }
+        </View>
+      )}
     </View>
   );
 }

@@ -3,12 +3,30 @@ import ContentView from "@/components/ContentView";
 import WorkoutItemList from "@/components/WorkoutItemList";
 import { useWorkoutContext } from "@/components/WorkoutProvider";
 import { Link, router } from "expo-router";
-import { useEffect } from "react";
-import { FlatList, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, FlatList, View } from "react-native";
 
 export default function StartWorkout() {
-  const { loadAll, remove, workouts, update } = useWorkoutContext();
+  const { loadAll, remove, workouts, update, getUnfinishedWorkout } =
+    useWorkoutContext();
   useEffect(() => {
+    getUnfinishedWorkout().then((w) => {
+      if (!!w) {
+        Alert.alert(
+          "Treino não finalizado",
+          `O treino ${w.name} não foi finalizado, deseja voltar?`,
+          [
+            {
+              text: "Sim",
+              onPress: () => {
+                handleStartWorkout(w.name);
+              },
+            },
+            { text: "Não", onPress: () => null },
+          ]
+        );
+      }
+    });
     loadAll();
   }, []);
   const handleRemoveItem = async (name: string) => {

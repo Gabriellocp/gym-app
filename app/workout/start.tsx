@@ -16,13 +16,21 @@ import { FlatList, Text, View } from "react-native";
 
 export default function StartWorkout() {
   const { id } = useLocalSearchParams();
+  const { loadById, start, select, workoutStatus, finishWorkout } =
+    useWorkoutContext();
+
   const [workout, setWorkout] = useState<IActiveWorkout>({
     exercises: [],
     name: "",
-    timeSpent: 0,
+    startAt: new Date(),
+    status: "UNDONE",
   });
-  useExitConfirm();
-  const { loadById, start } = useWorkoutContext();
+  useExitConfirm({
+    message: "O treino será finalizado",
+    callback: async () => {
+      await finishWorkout();
+    },
+  });
   useEffect(() => {
     const fetch = async () => {
       if (!id) {
@@ -30,7 +38,7 @@ export default function StartWorkout() {
       }
       const w = await loadById(id as string);
       if (w) {
-        setWorkout(await start(w));
+        setWorkout(await select(w));
       }
     };
     fetch();
@@ -49,6 +57,13 @@ export default function StartWorkout() {
       }),
     }));
   };
+  const handleStartWorkout = async () => {
+    await start();
+    setWorkout((prev) => ({
+      ...prev,
+      status: workoutStatus("ACTIVE"),
+    }));
+  };
   return (
     <ContentView>
       <Text style={{ fontSize: 24, textAlign: "center" }}>{id}</Text>
@@ -61,10 +76,15 @@ export default function StartWorkout() {
             key={item.name}
             exercise={item}
             status={item.status}
+            canPlay={workoutStatus() !== "UNDONE"}
             onControl={(exercise) => handleUpdateExercise(exercise)}
           />
         )}
       ></FlatList>
+      <Text>{workoutStatus()}</Text>
+      {workoutStatus() === "UNDONE" && (
+        <DefaultButton title="Iniciar" onPress={handleStartWorkout} />
+      )}
     </ContentView>
   );
 }

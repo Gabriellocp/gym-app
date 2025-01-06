@@ -4,10 +4,14 @@ import WorkoutControlService from "@/infra/services/WorkoutControlService";
 import WorkoutLocalControlService from "@/infra/services/WorkoutLocalControlService";
 import WorkoutService from "@/infra/services/WorkoutService";
 import { Stack } from "expo-router";
+import { useEffect, useMemo } from "react";
 
 export default function WorkoutLayout() {
   const service = new WorkoutService();
-  const control = new WorkoutControlService(WorkoutLocalControlService);
+  const control = useMemo(
+    () => new WorkoutControlService(WorkoutLocalControlService),
+    []
+  );
   return (
     <WorkoutProvider service={service} control={control}>
       <ExerciseProvider>

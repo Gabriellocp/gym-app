@@ -21,7 +21,7 @@ export default function TabLayout() {
               header: (props) => <Header {...props} />,
               sceneStyle: {
                 flex: 1,
-                backgroundColor: DefaultColors.backgroud,
+                backgroundColor: DefaultColors.background,
               },
               tabBarStyle: {
                 backgroundColor: DefaultColors.primary,

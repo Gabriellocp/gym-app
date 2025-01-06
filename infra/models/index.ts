@@ -18,7 +18,8 @@ export type IActiveExercise = (IExercise & {
 
 export type IActiveWorkout = {
     name: string,
-    timeSpent: number,
-    status?: IStatus
+    startAt: Date,
+    finishAt?: Date,
+    status: IStatus
     exercises: IActiveExercise[],
 }
