@@ -5,7 +5,6 @@ import { IWorkoutControlService } from "./interfaces/IWorkoutControlService";
 class WorkoutControlService implements IWorkoutControlService {
     workout?: IActiveWorkout | null;
     activeExercise?: IActiveExercise | null;
-    private done: IExercise[] = []
     constructor(public storage: IStorageService<IActiveWorkout>) {
 
     }
@@ -13,7 +12,7 @@ class WorkoutControlService implements IWorkoutControlService {
         if (!this.workout) {
             return
         }
-        this.storage.save({ ...this.workout, ...this.activeExercise })
+        this.storage.save(this.workout)
     }
 
     start = async (workout: IWorkout) => {
@@ -21,7 +20,7 @@ class WorkoutControlService implements IWorkoutControlService {
             name: workout.name,
             status: 'ACTIVE',
             timeSpent: 0,
-            exercises: workout.exercises.map(e => ({ ...e, status: 'UNDONE' }))
+            exercises: workout.exercises.map(e => ({ ...e, status: 'UNDONE', currentSet: 1 }))
         }
         this.saveStorage()
         return this.workout
@@ -39,7 +38,7 @@ class WorkoutControlService implements IWorkoutControlService {
         ) {
             return this.activeExercise
         }
-        this.activeExercise = { ...exercise, status: 'ACTIVE' }
+        this.activeExercise = { ...exercise, status: 'DOING', currentSet: 1 }
 
         this.saveStorage()
         return this.activeExercise
@@ -50,7 +49,7 @@ class WorkoutControlService implements IWorkoutControlService {
         }
         this.activeExercise = {
             ...this.activeExercise,
-            status: 'PAUSED'
+            status: 'INTERVAL'
         }
         this.saveStorage()
         return this.activeExercise
@@ -73,7 +72,8 @@ class WorkoutControlService implements IWorkoutControlService {
         }
         this.activeExercise = {
             ...this.activeExercise,
-            status: 'ACTIVE'
+            status: 'DOING',
+            currentSet: this.activeExercise.currentSet + 1
         }
         this.saveStorage()
         return this.activeExercise

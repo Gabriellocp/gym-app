@@ -59,7 +59,7 @@ export default function StartWorkout() {
             key={item.name}
             exercise={item}
             status={item.status}
-            onStatusChanged={(exercise) => handleUpdateExercise(exercise)}
+            onControl={(exercise) => handleUpdateExercise(exercise)}
           />
         )}
       ></FlatList>

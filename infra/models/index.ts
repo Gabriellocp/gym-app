@@ -9,10 +9,11 @@ export type IWorkout = {
     exercises: IExercise[]
 };
 export type IStatus = 'ACTIVE' | 'PAUSED' | 'FINISHED' | 'UNDONE'
+export type IExerciseStatus = 'DOING' | 'INTERVAL' | 'FINISHED' | 'UNDONE'
 
 export type IActiveExercise = (IExercise & {
-    // currentSet: number,
-    status: IStatus,
+    currentSet: number,
+    status: IExerciseStatus,
 })
 
 export type IActiveWorkout = {
