@@ -15,7 +15,7 @@ export default function ExerciseModal({ onClose, onSave }: ExerciseModalProps) {
     name: "",
     sets: 0,
   });
-  const handleChange = (field: keyof IExercise, value: any) => {
+  const handleChange = (field: keyof IExercise) => (value: any) => {
     setExercise((prev) => ({
       ...prev,
       [field]: value,
@@ -52,13 +52,28 @@ export default function ExerciseModal({ onClose, onSave }: ExerciseModalProps) {
               gap: 20,
             }}
           >
-            <Input onChangeText={(text) => handleChange("name", text)}></Input>
-            <Input onChangeText={(text) => handleChange("sets", text)}></Input>
             <Input
-              onChangeText={(text) => handleChange("interval", text)}
+              label="Nome"
+              value={exercise.name}
+              onChangeText={handleChange("name")}
             ></Input>
             <Input
-              onChangeText={(text) => handleChange("observation", text)}
+              keyboardType="numeric"
+              label="Sets"
+              value={exercise.sets.toString()}
+              onChangeText={handleChange("sets")}
+            ></Input>
+            <Input
+              keyboardType="numeric"
+              label="Intervalo"
+              value={exercise.interval.toString()}
+              defaultValue={undefined}
+              onChangeText={handleChange("interval")}
+            ></Input>
+            <Input
+              label="Observações"
+              value={exercise.observation ?? ""}
+              onChangeText={handleChange("observation")}
             ></Input>
           </ScrollView>
           <DefaultButton center title="Salvar" onPress={handleSave} />

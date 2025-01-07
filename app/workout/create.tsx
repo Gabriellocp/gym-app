@@ -12,7 +12,7 @@ import { useWorkoutContext } from "@/components/WorkoutProvider";
 
 export default function CreateWorkout() {
   const navigate = useNavigation();
-  const { exercises, create } = useExerciseContext();
+  const { exercises, create, remove } = useExerciseContext();
   const { save, update } = useWorkoutContext();
   const [name, setName] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -33,15 +33,24 @@ export default function CreateWorkout() {
       navigate.goBack();
     });
   };
+
   return (
     <ContentView>
       <View style={{ flex: 1, gap: 24 }}>
-        <Input onChangeText={setName}></Input>
+        <Input
+          onChangeText={setName}
+          label="Nome do treino"
+          value={name}
+        ></Input>
         <FlatList
           data={exercises}
           ItemSeparatorComponent={() => <View style={{ height: 16 }}></View>}
           renderItem={({ item }) => (
-            <ExerciseItemList key={item.name} exercise={item} />
+            <ExerciseItemList
+              key={item.name}
+              exercise={item}
+              onRemove={remove}
+            />
           )}
         />
       </View>

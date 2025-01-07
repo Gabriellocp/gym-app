@@ -4,6 +4,7 @@ import { createContext, ReactNode, useContext, useState } from "react";
 type IExerciseContext = {
   exercises: IExercise[];
   create: (exercise: IExercise) => IExercise | false;
+  remove: (exercise: IExercise) => void;
 } | null;
 
 const ExerciseContext = createContext<IExerciseContext>(null);
@@ -28,12 +29,16 @@ export default function CreateExerciseProvider({
     setExercises((prev) => [...prev, exercise]);
     return exercise;
   };
-
+  const handleRemove = (exercise: IExercise) => {
+    const exToRemove = exercises.find((ex) => ex.name === exercise.name);
+    setExercises((prev) => [...prev].filter((e) => e !== exToRemove));
+  };
   return (
     <ExerciseContext.Provider
       value={{
         exercises,
         create: handleCreateExercise,
+        remove: handleRemove,
       }}
     >
       {children}

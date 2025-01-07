@@ -1,12 +1,17 @@
 import { DefaultColors } from "@/constants/Colors";
 import { IExercise } from "@/infra/models";
 import { Text, View } from "react-native";
+import DefaultButton from "./Button";
 
 type ExerciseItemListProps = {
   exercise: IExercise;
+  onRemove: (ex: IExercise) => void;
 };
 
-export default function ExerciseItemList({ exercise }: ExerciseItemListProps) {
+export default function ExerciseItemList({
+  exercise,
+  onRemove,
+}: ExerciseItemListProps) {
   return (
     <View
       style={{
@@ -28,6 +33,7 @@ export default function ExerciseItemList({ exercise }: ExerciseItemListProps) {
       >
         {exercise.name}
       </Text>
+      <DefaultButton title="Remover" onPress={() => onRemove(exercise)} />
     </View>
   );
 }
