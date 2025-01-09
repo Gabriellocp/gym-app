@@ -1,18 +1,18 @@
-import { IWorkout } from "@/infra/models";
-import { IWorkoutControlService } from "@/infra/services/interfaces/IWorkoutControlService";
-import { IWorkoutService } from "@/infra/services/interfaces/IWorkoutService";
+import { Workout } from "@/domain/models";
+import { IWorkoutControlService } from "@/domain/interfaces/services/IWorkoutControlService";
+import { IWorkoutService } from "@/domain/interfaces/services/IWorkoutService";
 import { createContext, ReactNode, useContext, useState } from "react";
 
-type IWorkoutContext =
+type WorkoutContext =
   | ({
-      workouts: IWorkout[];
-      update: React.Dispatch<React.SetStateAction<IWorkout[]>>;
-      add: (workout: IWorkout) => IWorkout | false;
-    } & IWorkoutService &
+      workouts: Workout[];
+      update: React.Dispatch<React.SetStateAction<Workout[]>>;
+      add: (workout: Workout) => Workout | false;
+    } & IWorkoutService<Workout> &
       IWorkoutControlService)
   | null;
 
-const WorkoutContext = createContext<IWorkoutContext>(null);
+const WorkoutContext = createContext<WorkoutContext>(null);
 export const useWorkoutContext = () => {
   const context = useContext(WorkoutContext);
   if (!context) {
@@ -29,8 +29,8 @@ export default function WorkoutProvider({
   control: IWorkoutControlService;
   children: ReactNode;
 }) {
-  const [workouts, setWorkouts] = useState<IWorkout[]>([]);
-  const handleAddWorkout = (workout: IWorkout) => {
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const handleAddWorkout = (workout: Workout) => {
     const alreadyExist = workouts.find((w) => w.name === workout.name);
     if (alreadyExist) {
       return false;
@@ -62,6 +62,7 @@ export default function WorkoutProvider({
         finishWorkout: control.finishWorkout,
         workoutStatus: control.workoutStatus,
         getUnfinishedWorkout: control.getUnfinishedWorkout,
+        canFinishWorkout: control.canFinishWorkout,
       }}
     >
       {children}

@@ -3,19 +3,21 @@ import { useEffect } from "react"
 import { Alert, BackHandler, Platform } from "react-native"
 type ExitConfirmProps = {
     message?: string,
-    callback?: () => Promise<void>
+    callback?: () => Promise<void>,
+    condition?: boolean
 }
 
 export default function useExitConfirm({
     message,
-    callback
+    callback,
+    condition = true
 }: ExitConfirmProps = {
 
     }) {
 
     const navigation = useNavigation()
     useEffect(() => {
-        if (Platform.OS === "web") {
+        if (Platform.OS === "web" || !condition) {
             return
         }
         const isExitingApp = navigation.getState()?.index === 0

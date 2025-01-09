@@ -1,9 +1,9 @@
 import {
-  IActiveExercise,
-  IExercise,
-  IExerciseStatus,
-  IStatus,
-} from "@/infra/models";
+  ActiveExercise,
+  Exercise,
+  ExerciseStatus,
+  Status,
+} from "@/domain/models";
 import { Text, View } from "react-native";
 import DefaultButton from "./Button";
 import { DefaultColors } from "@/constants/Colors";
@@ -12,9 +12,9 @@ import { useState } from "react";
 import Counter from "./Counter";
 
 type WorkoutExerciseProps = {
-  exercise: IActiveExercise;
-  status: IExerciseStatus;
-  onControl: (exercise: IActiveExercise) => void;
+  exercise: ActiveExercise;
+  status: ExerciseStatus;
+  onControl: (exercise: ActiveExercise) => void;
   canPlay?: boolean;
 };
 export default function WorkoutExercise({
@@ -25,9 +25,8 @@ export default function WorkoutExercise({
 }: WorkoutExerciseProps) {
   const { startSet, pauseSet, finishSet, resumeSet } = useWorkoutContext();
   const [isLastSet, setIsLastSet] = useState(false);
-  const handleControl = (cb: IActiveExercise | null | undefined) => {
+  const handleControl = (cb: ActiveExercise | null | undefined) => {
     const ex = cb;
-    console.log("ex", ex);
     if (!ex) {
       return;
     }

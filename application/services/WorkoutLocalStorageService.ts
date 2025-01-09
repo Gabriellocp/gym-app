@@ -1,11 +1,11 @@
-import { IWorkout } from "../models";
-import { ILocalStorageService } from "./interfaces/ILocalStorageService";
-import { IStorageService } from "./interfaces/IStorageService";
+import { ILocalStorageService } from "../../domain/interfaces/services/ILocalStorageService";
+import { IStorageService } from "../../domain/interfaces/services/IStorageService";
+import { Workout } from "../../domain/models";
 import LocalStorageService from "./LocalStorageService";
-class WorkoutLocalStorageService implements IStorageService<IWorkout> {
-    private storage: ILocalStorageService<IWorkout[]> = new LocalStorageService()
+class WorkoutLocalStorageService implements IStorageService<Workout> {
+    private storage: ILocalStorageService<Workout[]> = new LocalStorageService()
 
-    save = async (data: IWorkout) => {
+    save = async (data: Workout) => {
         try {
             const currentData = await this.storage.load('workouts') ?? []
             this.storage.save('workouts', [...currentData, data])

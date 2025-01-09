@@ -4,22 +4,28 @@ import WorkoutExercise from "@/components/WorkoutExercise";
 import { useWorkoutContext } from "@/components/WorkoutProvider";
 import useExitConfirm from "@/hooks/useExitConfirm";
 import {
-  IActiveExercise,
-  IActiveWorkout,
-  IExercise,
-  IStatus,
-  IWorkout,
-} from "@/infra/models";
+  ActiveExercise,
+  ActiveWorkout,
+  Exercise,
+  Status,
+  Workout,
+} from "@/domain/models";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 
 export default function StartWorkout() {
   const { id } = useLocalSearchParams();
-  const { loadById, start, select, workoutStatus, finishWorkout } =
-    useWorkoutContext();
+  const {
+    loadById,
+    start,
+    select,
+    workoutStatus,
+    finishWorkout,
+    canFinishWorkout,
+  } = useWorkoutContext();
 
-  const [workout, setWorkout] = useState<IActiveWorkout>({
+  const [workout, setWorkout] = useState<ActiveWorkout>({
     exercises: [],
     name: "",
     startAt: new Date(),
@@ -30,6 +36,7 @@ export default function StartWorkout() {
     callback: async () => {
       await finishWorkout();
     },
+    condition: !canFinishWorkout(),
   });
   useEffect(() => {
     const fetch = async () => {
@@ -43,7 +50,8 @@ export default function StartWorkout() {
     };
     fetch();
   }, []);
-  const handleUpdateExercise = (exercise?: IActiveExercise | null) => {
+
+  const handleUpdateExercise = (exercise?: ActiveExercise | null) => {
     if (!exercise) {
       return;
     }
@@ -61,9 +69,10 @@ export default function StartWorkout() {
     await start();
     setWorkout((prev) => ({
       ...prev,
-      status: workoutStatus("ACTIVE"),
+      status: workoutStatus(),
     }));
   };
+
   return (
     <ContentView>
       <Text style={{ fontSize: 24, textAlign: "center" }}>{id}</Text>
@@ -81,7 +90,6 @@ export default function StartWorkout() {
           />
         )}
       ></FlatList>
-      <Text>{workoutStatus()}</Text>
       {workoutStatus() === "UNDONE" && (
         <DefaultButton title="Iniciar" onPress={handleStartWorkout} />
       )}

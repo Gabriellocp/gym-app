@@ -1,11 +1,11 @@
-import { IActiveWorkout } from "../models";
-import { ILocalStorageService } from "./interfaces/ILocalStorageService";
-import { IStorageService } from "./interfaces/IStorageService";
+import { ILocalStorageService } from "../../domain/interfaces/services/ILocalStorageService";
+import { IStorageService } from "../../domain/interfaces/services/IStorageService";
+import { ActiveWorkout } from "../../domain/models";
 import LocalStorageService from "./LocalStorageService";
-class WorkoutLocalControlService implements IStorageService<IActiveWorkout> {
-    private storage: ILocalStorageService<IActiveWorkout> = new LocalStorageService()
+class WorkoutLocalControlService implements IStorageService<ActiveWorkout> {
+    private storage: ILocalStorageService<ActiveWorkout> = new LocalStorageService()
 
-    save = async (data: IActiveWorkout) => {
+    save = async (data: ActiveWorkout) => {
         try {
             this.storage.save('activeWorkout', data)
         } catch (err) {
@@ -25,7 +25,6 @@ class WorkoutLocalControlService implements IStorageService<IActiveWorkout> {
         try {
             this.storage.remove('activeWorkout')
         } catch (err) {
-
         }
     }
 

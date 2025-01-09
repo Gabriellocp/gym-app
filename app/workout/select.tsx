@@ -7,8 +7,14 @@ import { useEffect, useState } from "react";
 import { Alert, FlatList, View } from "react-native";
 
 export default function StartWorkout() {
-  const { loadAll, remove, workouts, update, getUnfinishedWorkout } =
-    useWorkoutContext();
+  const {
+    loadAll,
+    remove,
+    workouts,
+    update,
+    getUnfinishedWorkout,
+    finishWorkout,
+  } = useWorkoutContext();
   useEffect(() => {
     getUnfinishedWorkout().then((w) => {
       if (!!w) {
@@ -22,7 +28,7 @@ export default function StartWorkout() {
                 handleStartWorkout(w.name);
               },
             },
-            { text: "Não", onPress: () => null },
+            { text: "Não", onPress: () => finishWorkout() },
           ]
         );
       }
@@ -33,7 +39,9 @@ export default function StartWorkout() {
     try {
       await remove(name);
       update((prev) => [...prev].filter((w) => w.name !== name));
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
   const handleStartWorkout = (name: string) => {
     router.push({

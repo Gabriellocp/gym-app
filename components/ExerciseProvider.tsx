@@ -1,13 +1,13 @@
-import { IExercise, IWorkout } from "@/infra/models";
+import { Exercise, Workout } from "@/domain/models";
 import { createContext, ReactNode, useContext, useState } from "react";
 
-type IExerciseContext = {
-  exercises: IExercise[];
-  create: (exercise: IExercise) => IExercise | false;
-  remove: (exercise: IExercise) => void;
+type ExerciseContext = {
+  exercises: Exercise[];
+  create: (exercise: Exercise) => Exercise | false;
+  remove: (exercise: Exercise) => void;
 } | null;
 
-const ExerciseContext = createContext<IExerciseContext>(null);
+const ExerciseContext = createContext<ExerciseContext>(null);
 export const useExerciseContext = () => {
   const context = useContext(ExerciseContext);
   if (!context) {
@@ -20,8 +20,8 @@ export default function CreateExerciseProvider({
 }: {
   children: ReactNode;
 }) {
-  const [exercises, setExercises] = useState<IExercise[]>([]);
-  const handleCreateExercise = (exercise: IExercise) => {
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const handleCreateExercise = (exercise: Exercise) => {
     const alreadyExist = exercises.find((ex) => ex.name === exercise.name);
     if (alreadyExist) {
       return false;
@@ -29,7 +29,7 @@ export default function CreateExerciseProvider({
     setExercises((prev) => [...prev, exercise]);
     return exercise;
   };
-  const handleRemove = (exercise: IExercise) => {
+  const handleRemove = (exercise: Exercise) => {
     const exToRemove = exercises.find((ex) => ex.name === exercise.name);
     setExercises((prev) => [...prev].filter((e) => e !== exToRemove));
   };

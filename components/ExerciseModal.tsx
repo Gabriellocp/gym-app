@@ -3,19 +3,20 @@ import Input from "./Input";
 import { useState } from "react";
 import DefaultButton from "./Button";
 import { DefaultColors } from "@/constants/Colors";
-import { IExercise } from "@/infra/models";
+import { Exercise } from "@/domain/models";
 
 type ExerciseModalProps = {
   onClose: () => void;
-  onSave: (exercise: IExercise) => void;
+  onSave: (exercise: Exercise) => void;
 };
 export default function ExerciseModal({ onClose, onSave }: ExerciseModalProps) {
-  const [exercise, setExercise] = useState<IExercise>({
+  const [exercise, setExercise] = useState<Exercise>({
     interval: 0,
     name: "",
     sets: 0,
+    workout_id: "",
   });
-  const handleChange = (field: keyof IExercise) => (value: any) => {
+  const handleChange = (field: keyof Exercise) => (value: any) => {
     setExercise((prev) => ({
       ...prev,
       [field]: value,
@@ -67,7 +68,6 @@ export default function ExerciseModal({ onClose, onSave }: ExerciseModalProps) {
               keyboardType="numeric"
               label="Intervalo"
               value={exercise.interval.toString()}
-              defaultValue={undefined}
               onChangeText={handleChange("interval")}
             ></Input>
             <Input

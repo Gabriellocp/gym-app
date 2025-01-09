@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ILocalStorageService } from './interfaces/ILocalStorageService';
+import { ILocalStorageService } from '../../domain/interfaces/services/ILocalStorageService';
 
 class LocalStorageService<T> implements ILocalStorageService<T> {
     async load(key: string) {
@@ -9,6 +9,17 @@ class LocalStorageService<T> implements ILocalStorageService<T> {
                 return null
             }
             return JSON.parse(item) as T
+        } catch (err) {
+            return null
+        }
+    };
+    async loadAll(key: string) {
+        try {
+            const item = await AsyncStorage.getItem(key)
+            if (!item) {
+                return null
+            }
+            return JSON.parse(item)
         } catch (err) {
             return null
         }
