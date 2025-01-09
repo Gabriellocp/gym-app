@@ -5,7 +5,7 @@ abstract class BaseUOW<T = any> implements IUnitOfWork {
     begin = async () => { };
     commit = async () => { };
     rollback = async () => { };
-    addRepo = <R>(repo: any, key: string) => {
+    addRepo = <R>(repo: R, key: string) => {
         this.repos.set(key, repo as R)
     };
     getRepo = <R>(key: string) => {

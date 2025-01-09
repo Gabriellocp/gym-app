@@ -1,11 +1,19 @@
+import { IWorkoutHistoryRepository } from "@/domain/interfaces/repositories/IWorkoutHistoryRepository";
 import { IWorkoutControlService } from "@/domain/interfaces/services/IWorkoutControlService";
 import { IStorageService } from "../../domain/interfaces/services/IStorageService";
 import { ActiveExercise, ActiveWorkout, Exercise, Status, Workout } from "../../domain/models";
-
+type WorkoutControlServiceArgs = {
+    storage: IStorageService<ActiveWorkout>
+    workoutHistoryRepo: IWorkoutHistoryRepository
+}
 class WorkoutControlService implements IWorkoutControlService {
     workout?: ActiveWorkout | null;
     activeExercise?: ActiveExercise | null;
-    constructor(public storage: IStorageService<ActiveWorkout>) {
+    private storage: IStorageService<ActiveWorkout>
+    private workoutHistoryRepo: IWorkoutHistoryRepository
+    constructor({ storage, workoutHistoryRepo }: WorkoutControlServiceArgs) {
+        this.storage = storage
+        this.workoutHistoryRepo = workoutHistoryRepo
     }
     private saveExercise = (exercise: ActiveExercise) => {
         this.activeExercise = exercise
@@ -114,12 +122,26 @@ class WorkoutControlService implements IWorkoutControlService {
         if (!this.workout) {
             throw new Error('Workout not found')
         }
-        const finishDate = new Date()
-        this.workout.finishAt = finishDate
-        this.saveStorage()
         const returnWorkout = this.workout
-        this.workout = null
-        this.storage.remove()
+        try {
+
+            const finishDate = new Date()
+            this.workout.finishAt = finishDate
+            this.saveStorage()
+            if (this.workout.status === 'ACTIVE' || this.workout.status === 'FINISHED') {
+                const r = await this.workoutHistoryRepo.save({
+                    ...this.workout,
+                    completedExercises: this.workout.exercises.filter(x => x.status === 'FINISHED').length ?? 0,
+                    createdAt: new Date(),
+                })
+                console.log(r, `CRIADO O HISTORICO`)
+            }
+            this.workout = null
+            this.storage.remove()
+        } catch (err) {
+            console.log(err)
+            throw new Error('Error while registering item on history')
+        }
         return returnWorkout
     }
     workoutStatus = (newStatus?: Status) => {

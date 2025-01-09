@@ -12,10 +12,13 @@ import WorkoutControlService from "@/application/services/WorkoutControlService"
 import WorkoutLocalControlService from "@/application/services/WorkoutLocalControlService";
 import WorkoutService from "@/application/services/WorkoutService";
 import SQLiteWorkoutUnitOfWork from "@/infra/uow/SQLiteWorkoutUnitOfWork";
+import { IWorkoutHistoryService } from "@/domain/interfaces/services/IWorkoutHistoryService";
+import WorkoutHistoryService from "@/application/services/WorkoutHistoryService";
 
 type ServiceContextProps = {
   workoutService?: IWorkoutService;
   workoutControlService?: IWorkoutControlService;
+  historyService?: IWorkoutHistoryService;
 };
 type ServiceProviderProps = {
   children: ReactNode;
@@ -23,23 +26,37 @@ type ServiceProviderProps = {
 const ServiceContext = createContext<ServiceContextProps>({
   workoutControlService: undefined,
   workoutService: undefined,
+  historyService: undefined,
 });
 
 export const useServiceContext = () => useContext(ServiceContext);
 export default function ServiceProvider({ children }: ServiceProviderProps) {
-  const { db, exerciseRepository, workoutRepository } = useRepositoryContext();
+  const {
+    db,
+    exerciseRepository,
+    workoutRepository,
+    exerciseHistoryRepository,
+    workoutHistoryRepository,
+  } = useRepositoryContext();
   const makeServices = useCallback(() => {
-    const workoutControlService = new WorkoutControlService(
-      WorkoutLocalControlService
-    );
+    const workoutControlService = new WorkoutControlService({
+      storage: WorkoutLocalControlService,
+      workoutHistoryRepo: workoutHistoryRepository!,
+    });
     const workoutService = new WorkoutService({
       workoutRepo: workoutRepository,
       exerciseRepo: exerciseRepository,
       workUnit: new SQLiteWorkoutUnitOfWork(db),
     });
+    const historyService = new WorkoutHistoryService({
+      workoutHistoryRepo: workoutHistoryRepository!,
+      exerciseHistoryRepo: exerciseHistoryRepository!,
+      workUnit: new SQLiteWorkoutUnitOfWork(db),
+    });
     return {
       workoutControlService,
       workoutService,
+      historyService,
     };
   }, [db]);
   return (

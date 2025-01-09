@@ -24,3 +24,7 @@ export type ActiveWorkout = {
     status: Status
     exercises: ActiveExercise[],
 }
+
+export type WorkoutHistory = ActiveWorkout & { createdAt: Date, completedExercises: number, id?: number }
+
+export type ExerciseHistory = Omit<ActiveExercise, 'workout_id'> & { history_id: number }

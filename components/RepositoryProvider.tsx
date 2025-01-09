@@ -14,6 +14,10 @@ import SQLWorkoutRepository from "@/infra/repositories/SQLWorkoutRepository";
 import { SQLiteDatabase } from "expo-sqlite";
 import { IWorkoutRepository } from "@/domain/interfaces/repositories/IWorkoutRepository";
 import { IExerciseRepository } from "@/domain/interfaces/repositories/IExerciseRepository";
+import { IWorkoutHistoryRepository } from "@/domain/interfaces/repositories/IWorkoutHistoryRepository";
+import { IExerciseHistoryRepository } from "@/domain/interfaces/repositories/IExerciseHistoryRepository";
+import SQLWorkoutHistoryRepository from "@/infra/repositories/SQLWorkoutHistoryRepository";
+import SQLExerciseHistoryRepository from "@/infra/repositories/SQLExerciseHistoryRepository";
 
 type RepositoryProviderProps = {
   children: ReactNode;
@@ -22,12 +26,16 @@ type RepositoryContextProps = {
   db?: any;
   workoutRepository?: IWorkoutRepository;
   exerciseRepository?: IExerciseRepository;
+  workoutHistoryRepository?: IWorkoutHistoryRepository;
+  exerciseHistoryRepository?: IExerciseHistoryRepository;
 };
 
 const RepoContext = createContext<RepositoryContextProps>({
   db: undefined,
   exerciseRepository: undefined,
   workoutRepository: undefined,
+  workoutHistoryRepository: undefined,
+  exerciseHistoryRepository: undefined,
 });
 export const useRepositoryContext = () => useContext(RepoContext);
 export default function RepositoryProvider({
@@ -41,6 +49,8 @@ export default function RepositoryProvider({
         db,
         exerciseRepository: new SQLExerciseRepository(db),
         workoutRepository: new SQLWorkoutRepository(db),
+        exerciseHistoryRepository: new SQLExerciseHistoryRepository(db),
+        workoutHistoryRepository: new SQLWorkoutHistoryRepository(db),
       };
     },
     []
