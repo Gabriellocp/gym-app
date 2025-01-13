@@ -41,6 +41,12 @@ class WorkoutService implements IWorkoutService<Workout> {
     save = async (workout: Workout): Promise<Workout | undefined> => {
         try {
             await this.workUnit?.begin()
+            if (!workout.name) {
+                throw new Error('Workout must have a name')
+            }
+            if (!workout.exercises.length) {
+                throw new Error('Workout must have at least one exercise')
+            }
             const createdWorkout = await this.workUnit?.getRepo<IWorkoutRepository>('workoutRepo').save(workout)
             await Promise.all(workout.exercises.map(async (x) => await this.workUnit?.getRepo<IExerciseRepository>('exerciseRepo').save({
                 ...x,
@@ -50,6 +56,7 @@ class WorkoutService implements IWorkoutService<Workout> {
             return createdWorkout
         } catch (err) {
             await this.workUnit?.rollback()
+            console.log('ERRO', err)
             throw new Error(`Failed to save workout. ERROR: ${err}`)
         }
     };

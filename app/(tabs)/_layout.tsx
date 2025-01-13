@@ -40,6 +40,13 @@ export default function TabLayout() {
                 tabBarIcon: () => <Ionicons name="home" size={30} />,
               }}
             />
+            <Tabs.Screen
+              name="history"
+              options={{
+                title: "Histórico",
+                tabBarIcon: () => <Ionicons name="list" size={30} />,
+              }}
+            />
           </Tabs>
         </SafeAreaView>
       </SafeAreaProvider>

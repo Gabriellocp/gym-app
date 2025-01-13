@@ -39,10 +39,6 @@ export default function ServiceProvider({ children }: ServiceProviderProps) {
     workoutHistoryRepository,
   } = useRepositoryContext();
   const makeServices = useCallback(() => {
-    const workoutControlService = new WorkoutControlService({
-      storage: WorkoutLocalControlService,
-      workoutHistoryRepo: workoutHistoryRepository!,
-    });
     const workoutService = new WorkoutService({
       workoutRepo: workoutRepository,
       exerciseRepo: exerciseRepository,
@@ -52,6 +48,10 @@ export default function ServiceProvider({ children }: ServiceProviderProps) {
       workoutHistoryRepo: workoutHistoryRepository!,
       exerciseHistoryRepo: exerciseHistoryRepository!,
       workUnit: new SQLiteWorkoutUnitOfWork(db),
+    });
+    const workoutControlService = new WorkoutControlService({
+      storage: WorkoutLocalControlService,
+      workoutHistoryService: historyService!,
     });
     return {
       workoutControlService,

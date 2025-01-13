@@ -5,14 +5,14 @@ import ExerciseItemList from "@/components/ExerciseItemList";
 import ExerciseModal from "@/components/ExerciseModal";
 import Input from "@/components/Input";
 import { Exercise } from "@/domain/models";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 import { useNavigation } from "expo-router";
 import { useWorkoutContext } from "@/components/WorkoutProvider";
 
 export default function CreateWorkout() {
   const navigate = useNavigation();
-  const { exercises, create, remove } = useExerciseContext();
+  const { exercises, create, remove, reset } = useExerciseContext();
   const { save, update } = useWorkoutContext();
   const [name, setName] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -38,7 +38,9 @@ export default function CreateWorkout() {
       navigate.goBack();
     });
   };
-
+  useEffect(() => {
+    reset();
+  }, []);
   return (
     <ContentView>
       <View style={{ flex: 1, gap: 24 }}>

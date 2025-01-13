@@ -5,6 +5,7 @@ type ExerciseContext = {
   exercises: Exercise[];
   create: (exercise: Exercise) => Exercise | false;
   remove: (exercise: Exercise) => void;
+  reset: () => void;
 } | null;
 
 const ExerciseContext = createContext<ExerciseContext>(null);
@@ -33,12 +34,16 @@ export default function CreateExerciseProvider({
     const exToRemove = exercises.find((ex) => ex.name === exercise.name);
     setExercises((prev) => [...prev].filter((e) => e !== exToRemove));
   };
+  const handleReset = () => {
+    setExercises([]);
+  };
   return (
     <ExerciseContext.Provider
       value={{
         exercises,
         create: handleCreateExercise,
         remove: handleRemove,
+        reset: handleReset,
       }}
     >
       {children}

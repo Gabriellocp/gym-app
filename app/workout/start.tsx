@@ -3,14 +3,8 @@ import ContentView from "@/components/ContentView";
 import WorkoutExercise from "@/components/WorkoutExercise";
 import { useWorkoutContext } from "@/components/WorkoutProvider";
 import useExitConfirm from "@/hooks/useExitConfirm";
-import {
-  ActiveExercise,
-  ActiveWorkout,
-  Exercise,
-  Status,
-  Workout,
-} from "@/domain/models";
-import { useLocalSearchParams } from "expo-router";
+import { ActiveExercise, ActiveWorkout, Workout } from "@/domain/models";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 
@@ -31,6 +25,7 @@ export default function StartWorkout() {
     startAt: new Date(),
     status: "UNDONE",
   });
+  const navigation = useNavigation();
   useExitConfirm({
     message: "O treino será finalizado",
     callback: async () => {
@@ -49,7 +44,7 @@ export default function StartWorkout() {
       }
     };
     fetch();
-  }, []);
+  }, [id]);
 
   const handleUpdateExercise = (exercise?: ActiveExercise | null) => {
     if (!exercise) {
@@ -64,6 +59,11 @@ export default function StartWorkout() {
         return e;
       }),
     }));
+  };
+  const handleFinishWorkout = async () => {
+    const finishedWorkout = await finishWorkout();
+    // setWorkout(finishedWorkout);
+    navigation.goBack();
   };
   const handleStartWorkout = async () => {
     await start();
@@ -86,12 +86,26 @@ export default function StartWorkout() {
             exercise={item}
             status={item.status}
             canPlay={workoutStatus() !== "UNDONE"}
-            onControl={(exercise) => handleUpdateExercise(exercise)}
+            onControl={(exercise) => {
+              handleUpdateExercise(exercise);
+              setWorkout((prev) => ({
+                ...prev,
+                status: workoutStatus(),
+              }));
+            }}
           />
         )}
       ></FlatList>
+      <Text>{workout.status}</Text>
       {workoutStatus() === "UNDONE" && (
         <DefaultButton title="Iniciar" onPress={handleStartWorkout} />
+      )}
+      {workoutStatus() === "ACTIVE" && (
+        <DefaultButton
+          title="Finalizar"
+          disabled={!canFinishWorkout()}
+          onPress={handleFinishWorkout}
+        />
       )}
     </ContentView>
   );

@@ -63,6 +63,7 @@ export default function WorkoutProvider({
         workoutStatus: control.workoutStatus,
         getUnfinishedWorkout: control.getUnfinishedWorkout,
         canFinishWorkout: control.canFinishWorkout,
+        resetWorkout: control.resetWorkout,
       }}
     >
       {children}

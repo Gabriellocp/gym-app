@@ -13,4 +13,5 @@ export interface IWorkoutControlService {
     finishWorkout: () => Promise<ActiveWorkout>,
     workoutStatus: (newStatus?: Status) => (Status),
     canFinishWorkout: () => boolean,
+    resetWorkout: () => Promise<void>,
 }

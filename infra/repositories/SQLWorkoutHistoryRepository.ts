@@ -24,9 +24,17 @@ class SQLWorkoutHistoryRepository implements IWorkoutHistoryRepository {
     getAll = async () => {
         return await this.db.getAllAsync<WorkoutHistory>(`
             SELECT * FROM WorkoutHistory
+            ORDER BY createdAt DESC
+
             `)
     };
     getById = async (id: string) => {
+        console.log(await this.db.getAllAsync<WorkoutHistory>(`
+            SELECT WorkoutHistory.*, ExerciseHistory.* 
+             FROM WorkoutHistory
+             JOIN ExerciseHistory ON ExerciseHistory.history_id = WorkoutHistory.id
+             WHERE WorkoutHistory.id = '${id}'
+             `))
         return await this.db.getFirstAsync<WorkoutHistory>(`
             SELECT * FROM WorkoutHistory WHERE id = '${id}'
             `)

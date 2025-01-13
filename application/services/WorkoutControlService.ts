@@ -1,19 +1,19 @@
-import { IWorkoutHistoryRepository } from "@/domain/interfaces/repositories/IWorkoutHistoryRepository";
 import { IWorkoutControlService } from "@/domain/interfaces/services/IWorkoutControlService";
+import { IWorkoutHistoryService } from "@/domain/interfaces/services/IWorkoutHistoryService";
 import { IStorageService } from "../../domain/interfaces/services/IStorageService";
 import { ActiveExercise, ActiveWorkout, Exercise, Status, Workout } from "../../domain/models";
 type WorkoutControlServiceArgs = {
     storage: IStorageService<ActiveWorkout>
-    workoutHistoryRepo: IWorkoutHistoryRepository
+    workoutHistoryService: IWorkoutHistoryService
 }
 class WorkoutControlService implements IWorkoutControlService {
     workout?: ActiveWorkout | null;
     activeExercise?: ActiveExercise | null;
     private storage: IStorageService<ActiveWorkout>
-    private workoutHistoryRepo: IWorkoutHistoryRepository
-    constructor({ storage, workoutHistoryRepo }: WorkoutControlServiceArgs) {
+    private workoutHistoryService: IWorkoutHistoryService
+    constructor({ storage, workoutHistoryService }: WorkoutControlServiceArgs) {
         this.storage = storage
-        this.workoutHistoryRepo = workoutHistoryRepo
+        this.workoutHistoryService = workoutHistoryService
     }
     private saveExercise = (exercise: ActiveExercise) => {
         this.activeExercise = exercise
@@ -23,6 +23,14 @@ class WorkoutControlService implements IWorkoutControlService {
             }
             return ex
         })
+    }
+    private setWorkoutInitialState = (workout: Workout): ActiveWorkout => {
+        return ({
+            startAt: new Date(),
+            name: workout.name,
+            status: 'UNDONE',
+            exercises: workout.exercises.map(e => ({ ...e, status: 'UNDONE', currentSet: 1 }))
+        }) as ActiveWorkout
     }
     private saveStorage = () => {
         if (!this.workout) {
@@ -40,14 +48,12 @@ class WorkoutControlService implements IWorkoutControlService {
         return this.workout
     }
     select = async (workout: Workout) => {
-        if (!this.workout) {
-            this.workout = {
-                startAt: new Date(),
-                name: workout.name,
-                status: 'UNDONE',
-                exercises: workout.exercises.map(e => ({ ...e, status: 'UNDONE', currentSet: 1 }))
-            }
+        // TODO: refactor this code and remove select responsiblity of checking existing workout
+        if (this.workout) {
+            return this.workout
         }
+        this.workout = this.setWorkoutInitialState(workout)
+        this.activeExercise = null
         return this.workout
 
     };
@@ -57,17 +63,15 @@ class WorkoutControlService implements IWorkoutControlService {
             return
         }
         this.workout.status = 'STARTED'
-        this.saveStorage()
     };
     startSet = (exercise: Exercise) => {
         if (!this.workout) {
             return null
         }
         this.workout.status = 'ACTIVE'
-        console.log('STATUS ALTERADO', this.workout)
         const selected = this.workout.exercises.find(e => e.name === exercise.name)
         if (selected?.name !== this.activeExercise?.name
-            && this.activeExercise !== undefined
+            && !!this.activeExercise
             && this.activeExercise?.status !== "FINISHED"
         ) {
             return this.activeExercise
@@ -102,8 +106,17 @@ class WorkoutControlService implements IWorkoutControlService {
     };
 
     canFinishWorkout = () => {
-        const allExercisesDone = this.workout?.exercises.every(x => x.status === 'FINISHED') ?? true
-        return this.workout?.status !== 'ACTIVE' && allExercisesDone
+        if (!this.workout) {
+            return true
+        }
+        // can finish workout without any issues
+        const canFinishStatus = ['STARTED', 'UNDONE', 'FINISHED'].includes(this.workout?.status)
+        if (canFinishStatus) {
+            return true
+        }
+        // case where workoutstatus === active
+        const allExercisesDone = this.workout.exercises.every(x => x.status === "FINISHED")
+        return allExercisesDone
     }
     resumeSet = () => {
         if (!this.activeExercise) {
@@ -127,22 +140,27 @@ class WorkoutControlService implements IWorkoutControlService {
 
             const finishDate = new Date()
             this.workout.finishAt = finishDate
+            this.workout.status = 'FINISHED'
             this.saveStorage()
-            if (this.workout.status === 'ACTIVE' || this.workout.status === 'FINISHED') {
-                const r = await this.workoutHistoryRepo.save({
-                    ...this.workout,
-                    completedExercises: this.workout.exercises.filter(x => x.status === 'FINISHED').length ?? 0,
-                    createdAt: new Date(),
-                })
-                console.log(r, `CRIADO O HISTORICO`)
-            }
-            this.workout = null
-            this.storage.remove()
+            await this.workoutHistoryService.add({
+                ...this.workout,
+                completedExercises: this.workout.exercises.filter(x => x.status === 'FINISHED').length ?? 0,
+                createdAt: new Date(),
+            })
+            this.resetWorkout()
         } catch (err) {
             console.log(err)
             throw new Error('Error while registering item on history')
         }
         return returnWorkout
+    }
+
+    resetWorkout = async () => {
+        this.workout = null
+        this.activeExercise = null
+        // this.workout = this.setWorkoutInitialState(this.workout as Workout)
+        await this.storage.remove()
+
     }
     workoutStatus = (newStatus?: Status) => {
         if (!this.workout) {

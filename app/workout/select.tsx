@@ -22,13 +22,13 @@ export default function StartWorkout() {
           "Treino não finalizado",
           `O treino ${w.name} não foi finalizado, deseja voltar?`,
           [
+            { text: "Finalizar", onPress: async () => await finishWorkout() },
             {
               text: "Sim",
               onPress: () => {
                 handleStartWorkout(w.name);
               },
             },
-            { text: "Não", onPress: () => finishWorkout() },
           ]
         );
       }

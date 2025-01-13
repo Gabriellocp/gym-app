@@ -45,5 +45,5 @@ export default function useExitConfirm({
             BackHandler.removeEventListener('hardwareBackPress', confirm)
             navigation.removeListener('beforeRemove', confirm)
         }
-    }, [navigation])
+    }, [navigation, condition])
 }

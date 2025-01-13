@@ -18,7 +18,8 @@ class SQLiteRepository implements IDatabase {
                         sets INTEGER NOT NULL,
                         interval INTEGER NOT NULL,
                         observation TEXT,
-                        FOREING KEY workout_id TEXT NOT NULL REFERENCES Workouts(name)  ON DELETE CASCADE
+                        workout_id TEXT NOT NULL,
+                        FOREIGN KEY (workout_id) REFERENCES Workouts(name)  ON DELETE CASCADE
                         );
                     CREATE TABLE IF NOT EXISTS WorkoutHistory (
                     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
@@ -38,11 +39,14 @@ class SQLiteRepository implements IDatabase {
                     setsDone INTEGER NOT NULL,
                     status TEXT NOT NULL,
                     history_id INTEGER NOT NULL,
-                    FOREING KEY history_id TEXT NOT NULL REFERENCES WorkoutHistory(id)  ON DELETE CASCADE
+                    FOREIGN KEY (history_id) REFERENCES WorkoutHistory(id)  ON DELETE CASCADE
                     );
                     `);
                 // this.db.execAsync(`
                 //         DROP TABLE WorkoutHistory;
+                //         DROP TABLE Workouts;
+                //         DROP TABLE Exercises;
+                //         DROP TABLE ExerciseHistory;
                 //         `)
             } catch (err) {
                 console.log(err)
