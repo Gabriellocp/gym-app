@@ -7,10 +7,14 @@ import WorkoutRepository from "@/infra/repositories/SQLWorkoutRepository";
 import WorkoutControlService from "@/application/services/WorkoutControlService";
 import WorkoutLocalControlService from "@/application/services/WorkoutLocalControlService";
 import WorkoutService from "@/application/services/WorkoutService";
-import { Stack } from "expo-router";
+import { Link, RelativePathString, Stack } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useMemo } from "react";
 import { useServiceContext } from "@/components/ServiceProvider";
+import Header from "@/components/Header";
+import { DefaultColors } from "@/constants/Colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Touchable, TouchableOpacity } from "react-native";
 
 export default function WorkoutLayout() {
   const { workoutControlService, workoutService } = useServiceContext();
@@ -18,7 +22,15 @@ export default function WorkoutLayout() {
   return (
     <WorkoutProvider service={workoutService!} control={workoutControlService!}>
       <ExerciseProvider>
-        <Stack>
+        <Stack
+          screenOptions={(props) => ({
+            headerStyle: {
+              backgroundColor: DefaultColors.primary,
+            },
+            headerTintColor: DefaultColors.accentText,
+            headerTitleAlign: "center",
+          })}
+        >
           <Stack.Screen
             name="select"
             options={{ title: "Selecionar treino" }}

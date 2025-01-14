@@ -23,6 +23,8 @@ const styles = StyleSheet.create({
   },
 });
 
+type HeaderProps = BottomTabHeaderProps;
+
 export default function Header({
   layout,
   navigation,
