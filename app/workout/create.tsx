@@ -67,16 +67,18 @@ export default function CreateWorkout() {
           onSave={handleCreate}
         ></ExerciseModal>
       )}
-      <DefaultButton
-        title="Novo exercício"
-        onPress={handleShowModal}
-        style={{ container: { alignSelf: "center" } }}
-      />
-      <DefaultButton
-        title="Salvar"
-        onPress={handleSave}
-        style={{ container: { alignSelf: "center" } }}
-      />
+      <View style={{ flexDirection: "row", justifyContent: "center", gap: 16 }}>
+        <DefaultButton
+          title="Novo exercício"
+          onPress={handleShowModal}
+          style={{ container: { alignSelf: "center" } }}
+        />
+        <DefaultButton
+          title="Salvar"
+          onPress={handleSave}
+          style={{ container: { alignSelf: "center" } }}
+        />
+      </View>
     </ContentView>
   );
 }

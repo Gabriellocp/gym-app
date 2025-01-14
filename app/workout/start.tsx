@@ -7,6 +7,7 @@ import { ActiveExercise, ActiveWorkout, Workout } from "@/domain/models";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
+import { DefaultColors } from "@/constants/Colors";
 
 export default function StartWorkout() {
   const { id } = useLocalSearchParams();
@@ -16,6 +17,7 @@ export default function StartWorkout() {
     select,
     workoutStatus,
     finishWorkout,
+    resetWorkout,
     canFinishWorkout,
   } = useWorkoutContext();
 
@@ -44,6 +46,11 @@ export default function StartWorkout() {
       }
     };
     fetch();
+    return () => {
+      if (canFinishWorkout()) {
+        resetWorkout();
+      }
+    };
   }, [id]);
 
   const handleUpdateExercise = (exercise?: ActiveExercise | null) => {
@@ -75,7 +82,11 @@ export default function StartWorkout() {
 
   return (
     <ContentView>
-      <Text style={{ fontSize: 24, textAlign: "center" }}>{id}</Text>
+      <Text
+        style={{ fontSize: 24, textAlign: "center", color: DefaultColors.text }}
+      >
+        {id}
+      </Text>
       <FlatList
         style={{ marginTop: 24 }}
         data={workout?.exercises}
@@ -98,11 +109,13 @@ export default function StartWorkout() {
       ></FlatList>
       <Text>{workout.status}</Text>
       {workoutStatus() === "UNDONE" && (
-        <DefaultButton title="Iniciar" onPress={handleStartWorkout} />
+        <DefaultButton title="Iniciar" onPress={handleStartWorkout} center />
       )}
       {workoutStatus() === "ACTIVE" && (
         <DefaultButton
           title="Finalizar"
+          variant="error"
+          center
           disabled={!canFinishWorkout()}
           onPress={handleFinishWorkout}
         />

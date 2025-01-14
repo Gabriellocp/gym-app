@@ -25,15 +25,20 @@ export default function ExerciseItemList({
     >
       <Text
         style={{
-          fontSize: 20,
+          fontSize: 16,
           flex: 1,
           fontWeight: "bold",
           textTransform: "uppercase",
+          color: DefaultColors.accentText,
         }}
       >
         {exercise.name}
       </Text>
-      <DefaultButton title="Remover" onPress={() => onRemove(exercise)} />
+      <DefaultButton
+        title="Remover"
+        onPress={() => onRemove(exercise)}
+        variant="error"
+      />
     </View>
   );
 }

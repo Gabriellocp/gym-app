@@ -48,20 +48,30 @@ export default function WorkoutExercise({
     >
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 32,
+          flexDirection: "column",
+          alignItems: "flex-start",
+          gap: 8,
+          flex: 1,
         }}
       >
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "bold",
+            color: DefaultColors.accentText,
+          }}
+        >
           {exercise.name}
         </Text>
         <View>
-          <Text>Séries: {exercise.sets}</Text>
+          <Text style={{ color: DefaultColors.accentText }}>
+            {`Séries: ${exercise.currentSet}/${exercise.sets}`}
+          </Text>
           {canPlay && (
             <>
-              <Text>Intervalo: {exercise.interval}</Text>
-              <Text>Intervalo: {exercise.currentSet}</Text>
+              <Text style={{ color: DefaultColors.accentText }}>
+                Intervalo: {exercise.interval}
+              </Text>
             </>
           )}
         </View>
@@ -73,7 +83,7 @@ export default function WorkoutExercise({
               DOING: (
                 <>
                   <DefaultButton
-                    title={"INTERVAL"}
+                    title={"Descanso"}
                     onPress={() => handleControl(pauseSet())}
                   />
                   {/* <DefaultButton title={"FINISH"} onPress={onChange} /> */}
@@ -84,24 +94,24 @@ export default function WorkoutExercise({
                   <Counter time={exercise.interval} />
                   {!isLastSet && (
                     <DefaultButton
-                      title={"RESUME"}
+                      title={"Próxima"}
                       onPress={() => handleControl(resumeSet())}
                     />
                   )}
                   <DefaultButton
-                    title={"FINISH"}
+                    title={"Finalizar"}
                     onPress={() => handleControl(finishSet())}
                   />
                 </>
               ),
               FINISHED: (
                 <View>
-                  <Text>CONGRATS!</Text>
+                  <Text style={{ color: DefaultColors.accentText }}> ✅</Text>
                 </View>
               ),
               UNDONE: (
                 <DefaultButton
-                  title={"PLAY"}
+                  title={"Iniciar"}
                   onPress={() => handleControl(startSet(exercise))}
                 />
               ),

@@ -26,11 +26,16 @@ export const Colors = {
 };
 
 export const DefaultColors = {
-  background: '#FFFFFF',  // Branco puro
-  text: '#333333',        // Texto principal - cinza escuro
-  primary: '#42A5F5',     // Cor primária - azul claro
-  accent: '#FF4081',      // Cor de destaque - rosa claro
-  error: '#D32F2F'        // Cor de erro - vermelho forte
+  background: '#F3F4F6',
+  text: '#111827',
+  primary: '#1E3A8A',
+  accent: '#EF4444',
+  error: '#DC2626',
+  success: '#10B981',
+  warning: '#F59E0B',
+  disabled: '#D1D5DB',
+  border: '#E5E7EB',
+  accentText: '#FFFFFF',
 }
 
 

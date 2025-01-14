@@ -40,7 +40,7 @@ export default function ExerciseModal({ onClose, onSave }: ExerciseModalProps) {
             backgroundColor: DefaultColors.background,
             justifyContent: "center",
             width: 320,
-            height: 230,
+            // height: 600,
             padding: 8,
             borderRadius: 16,
           }}

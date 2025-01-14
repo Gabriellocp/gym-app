@@ -44,14 +44,25 @@ export default function HistoryCard({ history }: HistoryCardProps) {
         }}
       >
         <View>
-          <Text style={{ flex: 1, fontSize: 20 }}>{history.name}</Text>
-          <Text style={{ flex: 1, fontSize: 12 }}>
-            {`Feito em ${new Date(history.startAt).toLocaleDateString(
-              "pt-br"
-            )}`}
+          <Text
+            style={{ flex: 1, fontSize: 20, color: DefaultColors.accentText }}
+          >
+            {history.name}
+          </Text>
+          <Text
+            style={{ flex: 1, fontSize: 12, color: DefaultColors.accentText }}
+          >
+            {`Feito em ${new Date(history.startAt).toLocaleDateString("pt-br", {
+              hour: "numeric",
+              minute: "2-digit",
+            })}`}
           </Text>
         </View>
-        <Ionicons name={visible ? "chevron-up" : "chevron-down"} size={18} />
+        <Ionicons
+          name={visible ? "chevron-up" : "chevron-down"}
+          size={18}
+          color={DefaultColors.accentText}
+        />
       </View>
       {visible && (
         <>
@@ -65,10 +76,21 @@ export default function HistoryCard({ history }: HistoryCardProps) {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text style={{ flex: 1, fontSize: 16, fontWeight: 500 }}>
+                  <Text
+                    style={{
+                      flex: 1,
+                      fontSize: 16,
+                      fontWeight: 500,
+                      color: DefaultColors.accentText,
+                    }}
+                  >
                     {item.name}
                   </Text>
-                  <Text>{`${getExerciseStatus(item.status)}(${item.setsDone}/${
+                  <Text
+                    style={{
+                      color: DefaultColors.accentText,
+                    }}
+                  >{`${getExerciseStatus(item.status)}(${item.setsDone}/${
                     item.sets
                   })`}</Text>
                 </View>
