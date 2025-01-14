@@ -15,10 +15,10 @@ type DefaultButtonProps = TouchableOpacityProps & { title: ReactNode } & {
     text?: TextStyle;
   };
   center?: boolean;
+  variant?: "default" | "secondary" | "error";
 };
 const defaultButtonStyle = StyleSheet.create({
   container: {
-    backgroundColor: DefaultColors.primary,
     minHeight: 40,
     display: "flex",
     flexDirection: "row",
@@ -31,6 +31,15 @@ const defaultButtonStyle = StyleSheet.create({
     // borderColor: DefaultColors.primary,
     justifyContent: "center",
   },
+  default: {
+    backgroundColor: DefaultColors.primary,
+  },
+  error: {
+    backgroundColor: DefaultColors.error,
+  },
+  secondary: {
+    backgroundColor: DefaultColors.accent,
+  },
   text: {
     textTransform: "uppercase",
     alignContent: "center",
@@ -38,11 +47,14 @@ const defaultButtonStyle = StyleSheet.create({
     verticalAlign: "middle",
     fontSize: 16,
     fontWeight: "700",
-    color: DefaultColors.text,
+    color: DefaultColors.accentText,
   },
 });
 const DefaultButton = forwardRef(
-  (props: DefaultButtonProps, ref: React.ForwardedRef<any>) => {
+  (
+    { variant = "default", ...props }: DefaultButtonProps,
+    ref: React.ForwardedRef<any>
+  ) => {
     return (
       <TouchableOpacity
         {...props}
@@ -50,6 +62,7 @@ const DefaultButton = forwardRef(
         style={[
           defaultButtonStyle.container,
           props.style?.container,
+          defaultButtonStyle[variant as keyof typeof defaultButtonStyle],
           props.center && { alignSelf: "center" },
         ]}
         activeOpacity={0.5}

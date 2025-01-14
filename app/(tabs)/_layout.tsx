@@ -17,8 +17,9 @@ export default function TabLayout() {
         <SafeAreaView style={{ flex: 1 }}>
           <Tabs
             screenOptions={{
-              tabBarActiveTintColor: "blue",
               header: (props) => <Header {...props} />,
+              tabBarActiveTintColor: DefaultColors.accent,
+              tabBarInactiveTintColor: DefaultColors.accentText,
               sceneStyle: {
                 flex: 1,
                 backgroundColor: DefaultColors.background,
@@ -29,7 +30,17 @@ export default function TabLayout() {
               tabBarLabelPosition: "below-icon",
               tabBarLabelStyle: {
                 paddingBottom: insets.bottom,
-                color: DefaultColors.text,
+                color: DefaultColors.accentText,
+              },
+              tabBarLabel: (props) => {
+                props.color = props.focused
+                  ? DefaultColors.accent
+                  : DefaultColors.accentText;
+                return (
+                  <Text style={{ fontSize: 10, color: props.color }}>
+                    {props.children}
+                  </Text>
+                );
               },
             }}
           >
@@ -37,14 +48,14 @@ export default function TabLayout() {
               name="index"
               options={{
                 title: "Home",
-                tabBarIcon: () => <Ionicons name="home" size={30} />,
+                tabBarIcon: (props) => <Ionicons name="home" {...props} />,
               }}
             />
             <Tabs.Screen
               name="history"
               options={{
                 title: "Histórico",
-                tabBarIcon: () => <Ionicons name="list" size={30} />,
+                tabBarIcon: (props) => <Ionicons name="list" {...props} />,
               }}
             />
           </Tabs>

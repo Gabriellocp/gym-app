@@ -11,11 +11,14 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 24,
     backgroundColor: DefaultColors.primary,
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: "700",
     textAlign: "center",
-    color: DefaultColors.text,
+    color: DefaultColors.accentText,
     flex: 1,
   },
 });

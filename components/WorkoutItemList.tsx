@@ -39,27 +39,14 @@ export default function WorkoutItemList({
           flex: 1,
           fontWeight: "bold",
           textTransform: "uppercase",
+          color: DefaultColors.accentText,
         }}
       >
         {workout.name}
       </Text>
-      <View style={{ flex: 1, flexDirection: "row", marginTop: 16 }}>
-        <DefaultButton
-          title="Deletar"
-          onPress={toggle}
-          style={{
-            container: { height: 20, backgroundColor: DefaultColors.error },
-            text: { fontSize: 14, color: DefaultColors.text },
-          }}
-        />
-        <DefaultButton
-          title="Começar"
-          onPress={onPress}
-          style={{
-            container: { height: 20 },
-            text: { fontSize: 14, color: DefaultColors.text },
-          }}
-        />
+      <View style={{ flex: 1, flexDirection: "row", marginTop: 16, gap: 16 }}>
+        <DefaultButton title="Deletar" variant="error" onPress={toggle} />
+        <DefaultButton title="Começar" onPress={onPress} />
       </View>
     </View>
   );

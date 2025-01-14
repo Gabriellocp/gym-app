@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <ContentView>
       <Link href="/workout/select" asChild>
-        <DefaultButton title="Iniciar treino" />
+        <DefaultButton title="Iniciar treino" center />
       </Link>
     </ContentView>
   );
