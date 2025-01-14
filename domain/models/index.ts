@@ -3,6 +3,7 @@ export type Exercise = {
     sets: number;
     interval: number;
     observation?: string;
+    reps: number;
     workout_id: string;
 };
 export type Workout = {

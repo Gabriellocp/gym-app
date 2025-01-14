@@ -11,9 +11,9 @@ class SQLExerciseRepository implements IExerciseRepository {
         }
         await this.db.runAsync(`
             INSERT INTO Exercises
-            (name, interval, sets, observation, workout_id)
-            VALUES (?,?,?,?,?)
-            `, [model.name, model.interval, model.sets, model.observation ?? null, model.workout_id])
+            (name, interval, sets, observation, reps,workout_id)
+            VALUES (?,?,?,?,?,?)
+            `, [model.name, model.interval, model.sets, model.observation ?? null, model.reps, model.workout_id])
         return model
     };
     getExercises = async (workoutId: string) => {

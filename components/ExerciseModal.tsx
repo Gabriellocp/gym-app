@@ -15,6 +15,7 @@ export default function ExerciseModal({ onClose, onSave }: ExerciseModalProps) {
     name: "",
     sets: 0,
     workout_id: "",
+    reps: 0,
   });
   const handleChange = (field: keyof Exercise) => (value: any) => {
     setExercise((prev) => ({
@@ -69,6 +70,12 @@ export default function ExerciseModal({ onClose, onSave }: ExerciseModalProps) {
               label="Intervalo"
               value={exercise.interval.toString()}
               onChangeText={handleChange("interval")}
+            ></Input>
+            <Input
+              keyboardType="numeric"
+              label="Repetições"
+              value={exercise.reps.toString()}
+              onChangeText={handleChange("reps")}
             ></Input>
             <Input
               label="Observações"

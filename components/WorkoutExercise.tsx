@@ -63,18 +63,17 @@ export default function WorkoutExercise({
         >
           {exercise.name}
         </Text>
-        <View>
-          <Text style={{ color: DefaultColors.accentText }}>
-            {`Séries: ${exercise.currentSet}/${exercise.sets}`}
-          </Text>
-          {canPlay && (
-            <>
-              <Text style={{ color: DefaultColors.accentText }}>
-                Intervalo: {exercise.interval}
-              </Text>
-            </>
-          )}
-        </View>
+
+        <Text
+          style={{
+            flexDirection: "column",
+            color: DefaultColors.accentText,
+          }}
+        >
+          {`Séries: ${exercise.currentSet}/${exercise.sets}\n`}
+          {`Reps: ${exercise.reps}\n`}
+          {canPlay && `Intervalo: ${exercise.interval}`}
+        </Text>
       </View>
       {canPlay && (
         <View>

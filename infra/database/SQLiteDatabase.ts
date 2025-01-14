@@ -19,6 +19,7 @@ class SQLiteRepository implements IDatabase {
                         interval INTEGER NOT NULL,
                         observation TEXT,
                         workout_id TEXT NOT NULL,
+                        reps INTEGER NOT NULL,
                         FOREIGN KEY (workout_id) REFERENCES Workouts(name)  ON DELETE CASCADE
                         );
                     CREATE TABLE IF NOT EXISTS WorkoutHistory (
@@ -38,6 +39,7 @@ class SQLiteRepository implements IDatabase {
                     observation TEXT,
                     setsDone INTEGER NOT NULL,
                     status TEXT NOT NULL,
+                    reps INTEGER NOT NULL,
                     history_id INTEGER NOT NULL,
                     FOREIGN KEY (history_id) REFERENCES WorkoutHistory(id)  ON DELETE CASCADE
                     );
