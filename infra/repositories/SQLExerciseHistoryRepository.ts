@@ -9,8 +9,8 @@ class SQLExerciseHistoryRepository implements IExerciseHistoryRepository {
     save = async (model: ExerciseHistory) => {
         await this.db.runAsync(`
                 INSERT INTO ExerciseHistory
-                (name,sets,setsDone,interval,observation,status,history_id)
-                VALUES (?,?,?,?,?,?,?)
+                (name,sets,setsDone,interval,observation,status,reps,history_id)
+                VALUES (?,?,?,?,?,?,?,?)
             `, [
             model.name,
             model.sets,
@@ -18,6 +18,7 @@ class SQLExerciseHistoryRepository implements IExerciseHistoryRepository {
             model.interval,
             model.observation ?? null,
             model.status,
+            model.reps,
             model.history_id,
         ])
         return model

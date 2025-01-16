@@ -28,7 +28,7 @@ class WorkoutHistoryService implements IWorkoutHistoryService {
         try {
             await this.workUnit.begin()
             const history = await this.workUnit.getRepo<IWorkoutHistoryRepository>('workoutHistory').save(model)
-            console.log('history id', history?.id)
+            console.log('history id', model.exercises)
             await Promise.all(model.exercises.map(async x => await this.workUnit.getRepo<IExerciseHistoryRepository>('exerciseHistory').save({
                 ...x,
                 history_id: history!.id!,
