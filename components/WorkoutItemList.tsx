@@ -3,6 +3,8 @@ import DefaultButton from "./Button";
 import { DefaultColors } from "@/constants/Colors";
 import useModal from "@/hooks/useModal";
 import ConfirmationModal from "./ConfirmationModal";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 type WorkoutItemListProps = {
   workout: { name: string; count?: number };
@@ -16,6 +18,34 @@ export default function WorkoutItemList({
   onRemove,
 }: WorkoutItemListProps) {
   const { isVisible, toggle } = useModal();
+  const { showActionSheetWithOptions } = useActionSheet();
+  const handleActions = () =>
+    showActionSheetWithOptions(
+      {
+        options: ["Deletar", "Atualizar", "Cancelar"],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 2,
+        showSeparators: true,
+        destructiveColor: DefaultColors.error,
+        cancelButtonTintColor: DefaultColors.accent,
+        title: workout.name,
+        containerStyle: {
+          borderRadius: 16,
+          width: 280,
+          alignSelf: "center",
+        },
+      },
+      (i?: number) => {
+        switch (i) {
+          case 0:
+            toggle();
+            break;
+          case 1:
+            break;
+        }
+      }
+    );
+
   return (
     <View
       style={{
@@ -44,9 +74,16 @@ export default function WorkoutItemList({
       >
         {workout.name}
       </Text>
+      <Ionicons
+        name="ellipsis-vertical"
+        size={24}
+        color={DefaultColors.accentText}
+        style={{ position: "absolute", right: 8, top: 8 }}
+        onPress={handleActions}
+      />
       <View style={{ flex: 1, flexDirection: "row", marginTop: 16, gap: 16 }}>
-        <DefaultButton title="Deletar" variant="error" onPress={toggle} />
-        <DefaultButton title="Começar" onPress={onPress} />
+        {/* <DefaultButton title="Deletar" variant="error" onPress={toggle} /> */}
+        <DefaultButton title="Começar" onPress={onPress} variant="secondary" />
       </View>
     </View>
   );
