@@ -40,7 +40,7 @@ class SQLExerciseHistoryRepository implements IExerciseHistoryRepository {
 
         return !!r.changes
     };
-    getByHistoryId = async (id: number) => {
+    getByHistoryId = async (id: string) => {
         return await this.db.getAllAsync<ExerciseHistory>(`
             SELECT * FROM ExerciseHistory
             WHERE history_id = '${id}'

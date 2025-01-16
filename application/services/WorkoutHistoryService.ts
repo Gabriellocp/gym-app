@@ -42,7 +42,7 @@ class WorkoutHistoryService implements IWorkoutHistoryService {
     getHistory = async () => {
         return this.workoutHistoryRepo.getAll()
     };
-    getExercisesByHistory = async (id: number) => {
+    getExercisesByHistory = async (id: string) => {
         try {
 
             return await this.exerciseHistoryRepo.getByHistoryId(id)

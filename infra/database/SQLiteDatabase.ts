@@ -12,16 +12,18 @@ class SQLiteRepository implements IDatabase<SQLite.SQLiteDatabase> {
                     PRAGMA journal_mode = WAL;
                     PRAGMA foreign_keys = ON;
                     CREATE TABLE IF NOT EXISTS Workouts (
-                        name TEXT PRIMARY KEY NOT NULL 
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+                        name TEXT  NOT NULL 
                         );
                     CREATE TABLE IF NOT EXISTS Exercises (
-                        name TEXT PRIMARY KEY NOT NULL, 
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+                        name TEXT NOT NULL, 
                         sets INTEGER NOT NULL,
                         interval INTEGER NOT NULL,
                         observation TEXT,
                         workout_id TEXT NOT NULL,
                         reps INTEGER NOT NULL,
-                        FOREIGN KEY (workout_id) REFERENCES Workouts(name)  ON DELETE CASCADE
+                        FOREIGN KEY (workout_id) REFERENCES Workouts(id)  ON DELETE CASCADE
                         );
                     CREATE TABLE IF NOT EXISTS WorkoutHistory (
                     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 

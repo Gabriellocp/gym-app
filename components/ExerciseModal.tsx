@@ -1,22 +1,42 @@
 import { Modal, ScrollView, Text, View } from "react-native";
 import Input from "./Input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DefaultButton from "./Button";
 import { DefaultColors } from "@/constants/Colors";
 import { Exercise } from "@/domain/models";
 
 type ExerciseModalProps = {
+  visible: boolean;
+  data: Exercise | null;
   onClose: () => void;
   onSave: (exercise: Exercise) => void;
 };
-export default function ExerciseModal({ onClose, onSave }: ExerciseModalProps) {
+export default function ExerciseModal({
+  onClose,
+  onSave,
+  data,
+  visible,
+}: ExerciseModalProps) {
   const [exercise, setExercise] = useState<Exercise>({
+    id: "",
     interval: 0,
     name: "",
     sets: 0,
     workout_id: "",
     reps: 0,
   });
+  useEffect(() => {
+    setExercise(
+      data ?? {
+        id: "",
+        interval: 0,
+        name: "",
+        sets: 0,
+        workout_id: "",
+        reps: 0,
+      }
+    );
+  }, [data]);
   const handleChange = (field: keyof Exercise) => (value: any) => {
     setExercise((prev) => ({
       ...prev,
@@ -26,6 +46,9 @@ export default function ExerciseModal({ onClose, onSave }: ExerciseModalProps) {
   const handleSave = () => {
     onSave(exercise);
   };
+  if (!visible) {
+    return null;
+  }
   return (
     <Modal onRequestClose={onClose} transparent>
       <View

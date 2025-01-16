@@ -19,7 +19,7 @@ class SQLWorkoutHistoryRepository implements IWorkoutHistoryRepository {
             model.status,
             model.finishAt?.toString() ?? null,
         ])
-        return { ...model, id: inserted.lastInsertRowId } as WorkoutHistory
+        return { ...model, id: inserted.lastInsertRowId.toString() } as WorkoutHistory
     };
     getAll = async () => {
         return await this.db.getAllAsync<WorkoutHistory>(`

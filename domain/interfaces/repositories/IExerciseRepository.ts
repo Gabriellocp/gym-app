@@ -3,4 +3,5 @@ import { IRepository } from "./IRepository";
 
 export interface IExerciseRepository extends IRepository<Exercise> {
     getExercises: (workoutId: string) => Promise<Exercise[]>
+    update: (exercise: Exercise) => Promise<void>
 }

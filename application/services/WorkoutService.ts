@@ -32,9 +32,10 @@ class WorkoutService implements IWorkoutService<Workout> {
         if (!workout) {
             return null
         }
-        const exercises = await this.exerciseRepo?.getExercises(workout.name) ?? []
+        const exercises = await this.exerciseRepo?.getExercises(workout.id!) ?? []
         return {
             name: workout.name,
+            id: workout.id,
             exercises
         }
     }
@@ -50,7 +51,7 @@ class WorkoutService implements IWorkoutService<Workout> {
             const createdWorkout = await this.workUnit?.getRepo<IWorkoutRepository>('workoutRepo').save(workout)
             await Promise.all(workout.exercises.map(async (x) => await this.workUnit?.getRepo<IExerciseRepository>('exerciseRepo').save({
                 ...x,
-                workout_id: workout.name
+                workout_id: createdWorkout?.id!
             })))
             await this.workUnit?.commit()
             return createdWorkout
@@ -61,8 +62,37 @@ class WorkoutService implements IWorkoutService<Workout> {
         }
     };
 
-    remove = async (workoutName: string): Promise<void> => {
-        await this.workoutRepo?.delete(workoutName)
+    remove = async (id: string): Promise<void> => {
+        try {
+
+            await this.workoutRepo?.delete(id)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    update = async (workout: Workout): Promise<void> => {
+        try {
+            await this.workUnit?.begin()
+            if (!workout.id) {
+                throw new Error('Workout not found, please provide a valid id')
+            }
+            const exerciseRepo = this.workUnit?.getRepo<IExerciseRepository>('exerciseRepo')
+            const existingExercises = await exerciseRepo?.getExercises(workout.id) ?? []
+
+            const toCreate = workout.exercises.filter(e => !e.id)
+            const toUpdate = existingExercises.filter(e => workout.exercises.find(x => x.id === e.id))
+            const toDelete = existingExercises.filter(e => !workout.exercises.find(x => x.id === e.id))
+            await Promise.all([
+                ...toCreate.map(async x => await exerciseRepo?.save({ ...x, workout_id: workout.id! })),
+                ...toUpdate.map(async x => await exerciseRepo?.update(x)),
+                ...toDelete.map(async x => await exerciseRepo?.delete(x.id)),
+            ])
+
+            await this.workUnit?.commit()
+        } catch (err) {
+            await this.workUnit?.rollback()
+
+        }
     }
 
 }

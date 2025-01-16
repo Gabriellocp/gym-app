@@ -2,11 +2,11 @@ import { Workout } from "@/domain/models";
 import { IWorkoutControlService } from "@/domain/interfaces/services/IWorkoutControlService";
 import { IWorkoutService } from "@/domain/interfaces/services/IWorkoutService";
 import { createContext, ReactNode, useContext, useState } from "react";
+import { useNavigation } from "expo-router";
 
 type WorkoutContext =
   | ({
       workouts: Workout[];
-      update: React.Dispatch<React.SetStateAction<Workout[]>>;
       add: (workout: Workout) => Workout | false;
     } & IWorkoutService<Workout> &
       IWorkoutControlService)
@@ -29,6 +29,7 @@ export default function WorkoutProvider({
   control: IWorkoutControlService;
   children: ReactNode;
 }) {
+  const navigator = useNavigation();
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const handleAddWorkout = (workout: Workout) => {
     const alreadyExist = workouts.find((w) => w.name === workout.name);
@@ -43,16 +44,37 @@ export default function WorkoutProvider({
     setWorkouts(data);
     return data;
   };
+  const handleSave = async (workout: Workout) => {
+    try {
+      const response = await service.save(workout);
+      setWorkouts((prev) => [...prev, workout]);
+      navigator.goBack();
+      return response;
+    } catch (err) {}
+  };
+  const handleRemove = async (id: string) => {
+    try {
+      await service.remove(id);
+      setWorkouts((prev) => [...prev].filter((e) => e.id !== id));
+    } catch (err) {}
+  };
+  const handleUpdate = async (workout: Workout) => {
+    try {
+      await service.update(workout);
+      setWorkouts((prev) => [...prev, workout]);
+      navigator.goBack();
+    } catch (err) {}
+  };
   return (
     <WorkoutContext.Provider
       value={{
         workouts,
-        update: setWorkouts,
+        update: handleUpdate,
         add: handleAddWorkout,
-        save: service.save,
+        save: handleSave,
         loadAll: handleLoad,
         loadById: service.loadById,
-        remove: service.remove,
+        remove: handleRemove,
         startSet: control.startSet,
         finishSet: control.finishSet,
         pauseSet: control.pauseSet,

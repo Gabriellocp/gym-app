@@ -1,4 +1,5 @@
 export type Exercise = {
+    id: string,
     name: string;
     sets: number;
     interval: number;
@@ -7,6 +8,7 @@ export type Exercise = {
     workout_id: string;
 };
 export type Workout = {
+    id?: string,
     name: string;
     exercises: Exercise[]
 };
@@ -19,6 +21,7 @@ export type ActiveExercise = (Exercise & {
 })
 
 export type ActiveWorkout = {
+    id?: string,
     name: string,
     startAt: Date,
     finishAt?: Date,
@@ -26,6 +29,6 @@ export type ActiveWorkout = {
     exercises: ActiveExercise[],
 }
 
-export type WorkoutHistory = ActiveWorkout & { createdAt: Date, completedExercises: number, id?: number }
+export type WorkoutHistory = ActiveWorkout & { createdAt: Date, completedExercises: number, id?: string }
 
-export type ExerciseHistory = Omit<ActiveExercise, 'workout_id'> & { history_id: number, setsDone?: number }
+export type ExerciseHistory = Omit<ActiveExercise, 'workout_id'> & { history_id: string, setsDone?: number }

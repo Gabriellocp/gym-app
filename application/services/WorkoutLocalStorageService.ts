@@ -25,11 +25,11 @@ class WorkoutLocalStorageService implements IStorageService<Workout> {
     remove = async (id?: string) => {
         try {
             const workouts = await this.storage.load('workouts') ?? []
-            const item = workouts?.find(e => e.name === id)
+            const item = workouts?.find(e => e.id === id)
             if (!item) {
                 return
             }
-            this.storage.save('workouts', workouts.filter(e => e.name !== id))
+            this.storage.save('workouts', workouts.filter(e => e.id !== id))
         } catch (err) {
 
         }

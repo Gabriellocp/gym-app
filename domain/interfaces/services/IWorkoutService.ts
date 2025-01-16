@@ -5,4 +5,5 @@ export interface IWorkoutService<T = any> {
     loadAll: () => Promise<Workout[]>,
     loadById: (id: string) => Promise<Workout | null>,
     remove: (id: string) => Promise<void>,
+    update: (workout: Workout) => Promise<void>
 }

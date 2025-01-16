@@ -8,11 +8,12 @@ class SQLWorkoutRepository implements IWorkoutRepository {
     }
 
     save = async (model: Workout) => {
-        this.db.runAsync(`
+        const r = await this.db.runAsync(`
                 INSERT INTO Workouts 
                 (name) VALUES (?)
         `, [model.name])
-        return model
+        console.log('ID GERADO', r.lastInsertRowId.toString())
+        return { ...model, id: r.lastInsertRowId.toString() }
     };
 
     getAll = async () => {
@@ -23,12 +24,12 @@ class SQLWorkoutRepository implements IWorkoutRepository {
     getById = async (id: string) => {
         return await this.db.getFirstAsync<Workout>(`
             SELECT * FROM Workouts
-            WHERE name = '${id}'
+            WHERE id = '${id}'
             `)
     };
     delete = async (id: string) => {
         const result = await this.db.runAsync(`
-            DELETE FROM Workouts WHERE name = '${id}'
+            DELETE FROM Workouts WHERE id = '${id}'
             `)
         return !!result.changes
     };

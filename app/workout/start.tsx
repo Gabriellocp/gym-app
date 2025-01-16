@@ -22,6 +22,7 @@ export default function StartWorkout() {
   } = useWorkoutContext();
 
   const [workout, setWorkout] = useState<ActiveWorkout>({
+    id: "",
     exercises: [],
     name: "",
     startAt: new Date(),
@@ -60,7 +61,7 @@ export default function StartWorkout() {
     setWorkout((prev) => ({
       ...prev,
       exercises: [...prev.exercises].map((e) => {
-        if (e.name === exercise.name) {
+        if (e.id === exercise.id) {
           return exercise;
         }
         return e;
@@ -85,7 +86,7 @@ export default function StartWorkout() {
       <Text
         style={{ fontSize: 24, textAlign: "center", color: DefaultColors.text }}
       >
-        {id}
+        {workout.name}
       </Text>
       <FlatList
         style={{ marginTop: 24 }}
@@ -93,7 +94,7 @@ export default function StartWorkout() {
         ItemSeparatorComponent={() => <View style={{ height: 24 }}></View>}
         renderItem={({ item }) => (
           <WorkoutExercise
-            key={item.name}
+            key={item.id}
             exercise={item}
             status={item.status}
             canPlay={workoutStatus() !== "UNDONE"}

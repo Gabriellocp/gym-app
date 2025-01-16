@@ -5,9 +5,11 @@ import useModal from "@/hooks/useModal";
 import ConfirmationModal from "./ConfirmationModal";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { router, useNavigation } from "expo-router";
+import { Workout } from "@/domain/models";
 
 type WorkoutItemListProps = {
-  workout: { name: string; count?: number };
+  workout: Workout;
   onPress: () => void;
   onRemove: () => void;
 };
@@ -41,6 +43,8 @@ export default function WorkoutItemList({
             toggle();
             break;
           case 1:
+            router.push("/workout/create");
+            router.setParams({ id: workout.id });
             break;
         }
       }

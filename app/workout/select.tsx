@@ -7,14 +7,8 @@ import { useEffect, useState } from "react";
 import { Alert, FlatList, View } from "react-native";
 
 export default function StartWorkout() {
-  const {
-    loadAll,
-    remove,
-    workouts,
-    update,
-    getUnfinishedWorkout,
-    finishWorkout,
-  } = useWorkoutContext();
+  const { loadAll, remove, workouts, getUnfinishedWorkout, finishWorkout } =
+    useWorkoutContext();
   useEffect(() => {
     getUnfinishedWorkout().then((w) => {
       if (!!w) {
@@ -26,7 +20,7 @@ export default function StartWorkout() {
             {
               text: "Sim",
               onPress: () => {
-                handleStartWorkout(w.name);
+                handleStartWorkout(w.id!);
               },
             },
           ]
@@ -35,18 +29,15 @@ export default function StartWorkout() {
     });
     loadAll();
   }, []);
-  const handleRemoveItem = async (name: string) => {
+  const handleRemoveItem = async (id: string) => {
     try {
-      await remove(name);
-      update((prev) => [...prev].filter((w) => w.name !== name));
-    } catch (err) {
-      console.log(err);
-    }
+      await remove(id);
+    } catch (err) {}
   };
-  const handleStartWorkout = (name: string) => {
+  const handleStartWorkout = (id: string) => {
     router.push({
       pathname: "/workout/start",
-      params: { id: name },
+      params: { id: id },
     });
   };
   return (
@@ -58,10 +49,10 @@ export default function StartWorkout() {
         renderItem={({ item }) => {
           return (
             <WorkoutItemList
-              key={item.name}
+              key={item.id}
               workout={item}
-              onPress={() => handleStartWorkout(item.name)}
-              onRemove={() => handleRemoveItem(item.name)}
+              onPress={() => handleStartWorkout(item.id!)}
+              onRemove={() => handleRemoveItem(item.id!)}
             />
           );
         }}

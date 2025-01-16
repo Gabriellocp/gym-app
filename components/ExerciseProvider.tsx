@@ -4,6 +4,7 @@ import { createContext, ReactNode, useContext, useState } from "react";
 type ExerciseContext = {
   exercises: Exercise[];
   create: (exercise: Exercise) => Exercise | false;
+  update: (exercise: Exercise) => void;
   remove: (exercise: Exercise) => void;
   reset: () => void;
 } | null;
@@ -23,7 +24,7 @@ export default function CreateExerciseProvider({
 }) {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const handleCreateExercise = (exercise: Exercise) => {
-    const alreadyExist = exercises.find((ex) => ex.name === exercise.name);
+    const alreadyExist = exercises.find((ex) => ex.id === exercise.id);
     if (alreadyExist) {
       return false;
     }
@@ -31,16 +32,22 @@ export default function CreateExerciseProvider({
     return exercise;
   };
   const handleRemove = (exercise: Exercise) => {
-    const exToRemove = exercises.find((ex) => ex.name === exercise.name);
+    const exToRemove = exercises.find((ex) => ex.id === exercise.id);
     setExercises((prev) => [...prev].filter((e) => e !== exToRemove));
   };
   const handleReset = () => {
     setExercises([]);
   };
+  const handleUpdate = (exercise: Exercise) => {
+    setExercises((prev) =>
+      [...prev].map((e) => (e.id === exercise.id ? exercise : e))
+    );
+  };
   return (
     <ExerciseContext.Provider
       value={{
         exercises,
+        update: handleUpdate,
         create: handleCreateExercise,
         remove: handleRemove,
         reset: handleReset,

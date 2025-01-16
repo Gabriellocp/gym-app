@@ -18,7 +18,7 @@ class WorkoutControlService implements IWorkoutControlService {
     private saveExercise = (exercise: ActiveExercise) => {
         this.activeExercise = exercise
         this.workout!.exercises = this.workout!.exercises.map(ex => {
-            if (ex.name === this.activeExercise?.name) {
+            if (ex.id === this.activeExercise?.id) {
                 return this.activeExercise
             }
             return ex
@@ -26,6 +26,7 @@ class WorkoutControlService implements IWorkoutControlService {
     }
     private setWorkoutInitialState = (workout: Workout): ActiveWorkout => {
         return ({
+            id: workout.id,
             startAt: new Date(),
             name: workout.name,
             status: 'UNDONE',
@@ -69,8 +70,8 @@ class WorkoutControlService implements IWorkoutControlService {
             return null
         }
         this.workout.status = 'ACTIVE'
-        const selected = this.workout.exercises.find(e => e.name === exercise.name)
-        if (selected?.name !== this.activeExercise?.name
+        const selected = this.workout.exercises.find(e => e.id === exercise.id)
+        if (selected?.id !== this.activeExercise?.id
             && !!this.activeExercise
             && this.activeExercise?.status !== "FINISHED"
         ) {
@@ -142,8 +143,9 @@ class WorkoutControlService implements IWorkoutControlService {
             this.workout.finishAt = finishDate
             this.workout.status = 'FINISHED'
             this.saveStorage()
+            const { id, ...rest } = this.workout
             await this.workoutHistoryService.add({
-                ...this.workout,
+                ...rest,
                 completedExercises: this.workout.exercises.filter(x => x.status === 'FINISHED').length ?? 0,
                 createdAt: new Date(),
             })

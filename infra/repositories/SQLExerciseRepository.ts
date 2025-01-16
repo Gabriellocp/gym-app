@@ -17,10 +17,6 @@ class SQLExerciseRepository implements IExerciseRepository {
         return model
     };
     getExercises = async (workoutId: string) => {
-        console.log(await this.db.getAllAsync<Exercise>(`
-            SELECT * FROM Exercises 
-            `))
-        // WHERE workout_id = '${workoutId}'
         return await this.db.getAllAsync<Exercise>(`
                 SELECT * FROM Exercises 
                 WHERE workout_id = '${workoutId}'
@@ -33,15 +29,25 @@ class SQLExerciseRepository implements IExerciseRepository {
     };
     getById = async (id: string) => {
         return this.db.getFirstAsync<Exercise>(`
-            SELECT * FROM Exercises WHERE name = '${id}'
+            SELECT * FROM Exercises WHERE id = '${id}'
             `)
     };
     delete = async (id: string) => {
         const result = await this.db.runAsync(`
-            DELETE FROM Exercises WHERE name = '${id}'
+            DELETE FROM Exercises WHERE id = '${id}'
             `)
         return !!result.changes
     };
+    update = async (model: Exercise) => {
+        await this.db.runAsync(`
+            UPDATE Exercises
+            SET interval = ?, 
+            sets = ?, 
+            observation = ?, 
+            reps = ?
+            WHERE id = ?
+            `, [model.interval, model.sets, model.observation ?? null, model.reps, model.id])
+    }
 
 }
 
