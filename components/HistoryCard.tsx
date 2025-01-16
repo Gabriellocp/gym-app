@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { useServiceContext } from "./ServiceProvider";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import getExerciseStatus from "@/utils/get-exercise-status";
+import getExerciseStatus from "@/main/utils/get-exercise-status";
 
 type HistoryCardProps = {
   history: WorkoutHistory;

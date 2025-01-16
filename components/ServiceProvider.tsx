@@ -14,6 +14,11 @@ import WorkoutService from "@/application/services/WorkoutService";
 import SQLiteWorkoutUnitOfWork from "@/infra/uow/SQLiteWorkoutUnitOfWork";
 import { IWorkoutHistoryService } from "@/domain/interfaces/services/IWorkoutHistoryService";
 import WorkoutHistoryService from "@/application/services/WorkoutHistoryService";
+import {
+  makeWorkoutControlService,
+  makeWorkoutHistoryService,
+  makeWorkoutService,
+} from "@/main/factories";
 
 type ServiceContextProps = {
   workoutService?: IWorkoutService;
@@ -31,34 +36,16 @@ const ServiceContext = createContext<ServiceContextProps>({
 
 export const useServiceContext = () => useContext(ServiceContext);
 export default function ServiceProvider({ children }: ServiceProviderProps) {
-  const {
-    db,
-    exerciseRepository,
-    workoutRepository,
-    exerciseHistoryRepository,
-    workoutHistoryRepository,
-  } = useRepositoryContext();
   const makeServices = useCallback(() => {
-    const workoutService = new WorkoutService({
-      workoutRepo: workoutRepository,
-      exerciseRepo: exerciseRepository,
-      workUnit: new SQLiteWorkoutUnitOfWork(db),
-    });
-    const historyService = new WorkoutHistoryService({
-      workoutHistoryRepo: workoutHistoryRepository!,
-      exerciseHistoryRepo: exerciseHistoryRepository!,
-      workUnit: new SQLiteWorkoutUnitOfWork(db),
-    });
-    const workoutControlService = new WorkoutControlService({
-      storage: WorkoutLocalControlService,
-      workoutHistoryService: historyService!,
-    });
+    const workoutService = makeWorkoutService();
+    const historyService = makeWorkoutHistoryService();
+    const workoutControlService = makeWorkoutControlService();
     return {
       workoutControlService,
       workoutService,
       historyService,
     };
-  }, [db]);
+  }, []);
   return (
     <ServiceContext.Provider value={makeServices()}>
       {children}

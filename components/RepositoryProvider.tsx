@@ -18,20 +18,26 @@ import { IWorkoutHistoryRepository } from "@/domain/interfaces/repositories/IWor
 import { IExerciseHistoryRepository } from "@/domain/interfaces/repositories/IExerciseHistoryRepository";
 import SQLWorkoutHistoryRepository from "@/infra/repositories/SQLWorkoutHistoryRepository";
 import SQLExerciseHistoryRepository from "@/infra/repositories/SQLExerciseHistoryRepository";
+import {
+  makeExerciseHistoryRepo,
+  makeExerciseRepo,
+  makeWorkoutHistoryRepo,
+  makeWorkoutRepo,
+} from "@/main/factories";
+import { Text } from "react-native";
+import { SplashScreen } from "expo-router";
 
 type RepositoryProviderProps = {
   children: ReactNode;
 };
 type RepositoryContextProps = {
-  db?: any;
   workoutRepository?: IWorkoutRepository;
   exerciseRepository?: IExerciseRepository;
   workoutHistoryRepository?: IWorkoutHistoryRepository;
   exerciseHistoryRepository?: IExerciseHistoryRepository;
 };
-
+SplashScreen.preventAutoHideAsync();
 const RepoContext = createContext<RepositoryContextProps>({
-  db: undefined,
   exerciseRepository: undefined,
   workoutRepository: undefined,
   workoutHistoryRepository: undefined,
@@ -42,30 +48,36 @@ export default function RepositoryProvider({
   children,
 }: RepositoryProviderProps) {
   const [repositories, setRepositories] = useState<RepositoryContextProps>({});
-
-  const makeRepositories = useCallback(
-    (db: SQLiteDatabase): RepositoryContextProps => {
-      return {
-        db,
-        exerciseRepository: new SQLExerciseRepository(db),
-        workoutRepository: new SQLWorkoutRepository(db),
-        exerciseHistoryRepository: new SQLExerciseHistoryRepository(db),
-        workoutHistoryRepository: new SQLWorkoutHistoryRepository(db),
-      };
-    },
-    []
-  );
+  const [isConnected, setIsConnected] = useState(false);
+  const makeRepositories = useCallback((): RepositoryContextProps => {
+    return {
+      exerciseRepository: makeExerciseRepo(),
+      workoutRepository: makeWorkoutRepo(),
+      exerciseHistoryRepository: makeExerciseHistoryRepo(),
+      workoutHistoryRepository: makeWorkoutHistoryRepo(),
+    };
+  }, []);
 
   useEffect(() => {
     const handleConnect = async () => {
       try {
         const sqlite = new SQLiteRepository();
         await sqlite.connect("workouts.db");
-        setRepositories(makeRepositories(sqlite.db!));
-      } catch (err) {}
+        setRepositories(makeRepositories());
+        setIsConnected(true);
+      } catch (err) {
+        console.log(err);
+      }
     };
     handleConnect();
   }, []);
+
+  useEffect(() => {
+    if (isConnected) SplashScreen.hideAsync();
+  }, [isConnected]);
+  if (!isConnected) {
+    return null;
+  }
   return (
     <RepoContext.Provider value={repositories}>{children}</RepoContext.Provider>
   );

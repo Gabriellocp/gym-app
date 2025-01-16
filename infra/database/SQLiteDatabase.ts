@@ -1,8 +1,9 @@
 import * as SQLite from 'expo-sqlite';
 import { IDatabase } from '../interfaces/database/IDatabase';
 
-class SQLiteRepository implements IDatabase {
+class SQLiteRepository implements IDatabase<SQLite.SQLiteDatabase> {
     db: SQLite.SQLiteDatabase | undefined
+    static dbInstance: SQLite.SQLiteDatabase
     public connect = async (dbName: string) => {
         while (!this.db) {
             try {
@@ -50,13 +51,19 @@ class SQLiteRepository implements IDatabase {
                 //         DROP TABLE Exercises;
                 //         DROP TABLE ExerciseHistory;
                 //         `)
+                SQLiteRepository.dbInstance = this.db
             } catch (err) {
                 console.log(err)
                 throw new Error('Db connection failed')
             }
         }
-
     };
+    getDb = () => {
+        if (!SQLiteRepository.dbInstance) {
+            throw new Error('Db was not initialized yet')
+        }
+        return SQLiteRepository.dbInstance
+    }
 }
 
 
